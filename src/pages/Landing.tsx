@@ -464,48 +464,72 @@ export const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* ═══ How It Works ═══ */}
+      {/* ═══ Quest Resolution Roadmap ═══ */}
       <section className="px-6 md:px-16 py-20 relative z-20 border-t border-[#1f1f26]">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-14"
+            className="text-center mb-16"
           >
-            <h2 className="text-xl font-black text-white tracking-wider font-mc-title uppercase">How It Works</h2>
-            <p className="text-slate-500 font-mono-readable mt-3 text-xs max-w-lg mx-auto">Get started in seconds. No training needed.</p>
+            <h2 className="text-xl md:text-2xl font-black text-white tracking-wider font-mc-title uppercase">
+              Quest Resolution Roadmap
+            </h2>
+            <p className="text-slate-500 font-mono-readable mt-3 text-xs max-w-xl mx-auto leading-relaxed">
+              Follow the leveling journey of a hostel issue from the moment a student logs it to final resolution and reward payout.
+            </p>
           </motion.div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+          {/* Connected Grid (4 Steps) */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+            
+            {/* Connecting lines on desktop screens */}
+            <div className="hidden md:block absolute top-12 left-[12%] right-[12%] h-0.5 border-t-2 border-dashed border-[#2b2b35] z-0" />
+
             {[
-              { step: '01', title: 'Sign In', desc: 'Log in with your college credentials as a student or warden. Your profile is auto-created.', icon: GraduationCap, color: '#00d8df' },
-              { step: '02', title: 'Use Features', desc: 'Report issues, apply for gate passes, check the mess menu, or chat with the AI companion.', icon: Sparkles, color: '#00e676' },
-              { step: '03', title: 'Track & Earn', desc: 'Monitor issue status in real-time and earn XP rewards for active participation.', icon: Trophy, color: '#ffbe00' },
+              { level: 'LEVEL 1', title: 'Quest Logged', desc: 'Student posts an issue scroll (e.g. Wi-Fi down) on the board. Others can upvote it.', icon: GraduationCap, color: '#00d8df' },
+              { level: 'LEVEL 2', title: 'AI Processing', desc: 'The Librarian AI auto-formats the report and prepares complaint scrolls for Warden review.', icon: Sparkles, color: '#a78bfa' },
+              { level: 'LEVEL 3', title: 'Warden Dispatch', desc: 'The Warden reviews details, changes status to "In Progress", and assigns repair workers.', icon: ShieldCheck, color: '#ffbe00' },
+              { level: 'LEVEL 4', title: 'Quest Resolved', desc: 'Warden marks it "Resolved". The quest completes, granting the reporter XP & Emeralds!', icon: Trophy, color: '#00e676' },
             ].map((item, i) => (
               <motion.div
-                key={item.step}
-                initial={{ opacity: 0, y: 15 }}
+                key={item.level}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="flex flex-col items-center text-center gap-4"
+                transition={{ delay: i * 0.12 }}
+                className="flex flex-col items-center text-center gap-4 relative z-10 group"
               >
-                <div className="relative">
+                {/* Bouncing circular level bubble */}
+                <div
+                  className="w-16 h-16 rounded-full border-3 flex items-center justify-center relative transition-all duration-300 group-hover:scale-110 shadow-lg cursor-default"
+                  style={{ 
+                    borderColor: item.color, 
+                    backgroundColor: '#1f1f26', 
+                    color: item.color,
+                    boxShadow: `inset 0 0 10px ${item.color}30, 0 4px 12px rgba(0,0,0,0.5)`
+                  }}
+                >
+                  <item.icon size={26} className="transition-transform duration-300 group-hover:rotate-12" />
+                  
+                  {/* Small level tag */}
                   <div
-                    className="w-16 h-16 rounded-sm border-2 flex items-center justify-center"
-                    style={{ borderColor: `${item.color}50`, backgroundColor: `${item.color}10`, color: item.color }}
+                    className="absolute -bottom-2 px-2 py-0.5 rounded-sm text-[6px] font-black border font-mc-title"
+                    style={{ backgroundColor: item.color, borderColor: '#101014', color: '#000' }}
                   >
-                    <item.icon size={28} />
-                  </div>
-                  <div
-                    className="absolute -top-2 -right-2 w-6 h-6 rounded-full flex items-center justify-center text-[8px] font-black border font-mc-title"
-                    style={{ backgroundColor: item.color, borderColor: '#141419', color: '#000' }}
-                  >
-                    {item.step}
+                    {item.level}
                   </div>
                 </div>
-                <h3 className="text-sm font-bold text-white font-mc-sub uppercase tracking-wide">{item.title}</h3>
-                <p className="text-xs text-slate-400 font-mono-readable leading-relaxed max-w-xs">{item.desc}</p>
+
+                <div className="mt-2 space-y-2">
+                  <h3 className="text-xs font-black text-white font-mc-sub uppercase tracking-wide group-hover:text-mc-cyan transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-[11px] text-slate-400 font-mono-readable leading-relaxed max-w-[220px] mx-auto">
+                    {item.desc}
+                  </p>
+                </div>
               </motion.div>
             ))}
           </div>
