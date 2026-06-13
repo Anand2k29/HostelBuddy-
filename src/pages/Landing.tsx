@@ -206,147 +206,106 @@ export const Landing: React.FC = () => {
       </nav>
 
       {/* ═══ Hero Section ═══ */}
-      <section className="flex-1 flex items-center px-6 md:px-16 py-8 md:py-14 max-w-7xl mx-auto w-full relative z-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center w-full">
+      <section className="flex-1 flex flex-col items-center px-6 md:px-16 py-8 md:py-12 max-w-7xl mx-auto w-full relative z-20">
+        {/* Centered Heading Block */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center max-w-3xl mx-auto mb-10 flex flex-col items-center"
+        >
+          <div className="inline-flex items-center gap-2 bg-[#2b2b35] border border-[#3c3c44] px-4 py-2 rounded text-[8px] font-mc-sub text-mc-cyan uppercase tracking-widest mb-6">
+            <span className="w-1.5 h-1.5 bg-[#00e676] rounded-full animate-ping" />
+            Server Online — {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
+          </div>
 
-          {/* Left Column */}
-          <motion.div
-            initial="hidden"
-            animate="show"
-            variants={{
-              hidden: {},
-              show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
-            }}
-            className="flex flex-col items-start space-y-8"
+          <h1
+            className="text-5xl md:text-7xl font-black text-white font-mc-title uppercase leading-none select-none tracking-tight flex items-center justify-center flex-wrap gap-x-4 gap-y-2"
+            style={{ textShadow: '4px 4px 0px #111011, 8px 8px 0px rgba(0,0,0,0.15)' }}
           >
-            <motion.div
-              variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-              className="inline-flex items-center gap-2 bg-[#2b2b35] border border-[#3c3c44] px-4 py-2 rounded text-[8px] font-mc-sub text-mc-cyan uppercase tracking-widest"
-            >
-              <span className="w-1.5 h-1.5 bg-[#00e676] rounded-full animate-ping" />
-              Server Online — {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
-            </motion.div>
+            <span>Hostel</span>
+            <span className="text-mc-cyan">Buddy</span>
+            {/* Level Badge Shield */}
+            <span className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-mc-gold border-3 border-black text-black text-[10px] md:text-xs font-mc-title rounded-full shadow-[0_4px_0_#b27d00] animate-bounce shrink-0 relative ml-1">
+              99
+              {/* Level Up floating text effect */}
+              <span className="absolute -top-6 text-[6px] md:text-[8px] font-mc-sub text-[#00e676] animate-pulse uppercase tracking-wider bg-black/60 px-1.5 py-0.5 rounded border border-[#00e676]/30">Lvl Up!</span>
+            </span>
+          </h1>
+          <p className="mt-4 text-xs md:text-sm text-slate-400 font-mc-sub uppercase tracking-widest">
+            Your Complete Gamified Campus OS
+          </p>
 
-            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="relative">
-              <h1
-                className="text-4xl md:text-6xl font-black text-white font-mc-title uppercase leading-tight select-none"
-                style={{ textShadow: '3px 3px 0px #111011, 6px 6px 0px rgba(0,0,0,0.15)' }}
-              >
-                Hostel<br />
-                <span className="text-mc-cyan">Buddy</span>
-              </h1>
-              {/* Pulsing Yellow Splash Text */}
-              <span className="absolute -bottom-2 right-12 md:right-24 text-mc-gold font-mc-sub text-[10px] md:text-xs uppercase mc-splash tracking-wider drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)] pointer-events-none select-none z-30">
-                Warden Approved!
-              </span>
-              <p className="mt-3 text-[11px] md:text-xs text-slate-400 font-mc-sub uppercase tracking-widest">
-                Your Complete Hostel Management Platform
-              </p>
-            </motion.div>
+          <p className="mt-6 text-sm md:text-base text-slate-300 leading-relaxed font-mono-readable max-w-2xl">
+            Embark on your hostel adventure. Report campus quests (complaints), rate food feasts, match with compatible roommates, and manage outpasses—all in one immersive portal.
+          </p>
+        </motion.div>
 
-            <motion.p
-              variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-              className="text-sm text-slate-400 leading-relaxed font-mono-readable max-w-md"
-            >
-              Everything you need for hostel life — in one place. Report issues, check the mess menu, find roommates, manage gate passes, and get AI assistance anytime.
-            </motion.p>
-
-            {/* Feature Highlights */}
-            <motion.div
-              variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-              className="flex flex-col gap-2"
-            >
-              {['Track and resolve hostel issues instantly', 'Digital gate passes — no paper forms', 'AI assistant for rules, complaints & guidance'].map(item => (
-                <div key={item} className="flex items-center gap-2.5 text-[11px] text-slate-300 font-mono-readable">
-                  <CheckCircle size={13} className="text-emerald-400 shrink-0" />
-                  {item}
-                </div>
-              ))}
-            </motion.div>
-
-            {/* CTA Buttons */}
-            <motion.div
-              variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-              className="w-full space-y-3 pt-2"
-            >
-              <p className="text-[8px] font-bold text-slate-500 uppercase tracking-widest font-mc-sub">Select Your Role to Continue</p>
-              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
-                <button
-                  onClick={() => handleRoleSelect(UserRole.STUDENT)}
-                  className="btn-mc flex-1 flex items-center justify-center gap-2.5 py-4 uppercase glow-cta text-[11px]"
-                >
-                  <GraduationCap size={16} /> Student Login
-                </button>
-                <button
-                  onClick={() => handleRoleSelect(UserRole.ADMIN)}
-                  className="btn-mc flex-1 flex items-center justify-center gap-2.5 py-4 bg-[#404040] hover:bg-[#00d8df] hover:text-[#0b0f19] uppercase text-[11px]"
-                >
-                  <ShieldCheck size={16} /> Warden / Admin
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-
-          {/* Right Column: Dashboard Preview */}
+        {/* Two-Column Cards Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch w-full max-w-6xl mx-auto">
+          
+          {/* Left Column: Dashboard Preview Card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            transition={{ delay: 0.3, type: 'spring', stiffness: 60, damping: 15 }}
-            className="hidden lg:block relative w-full max-w-lg mx-auto"
+            initial={{ opacity: 0, scale: 0.95, x: -30 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 60, damping: 15 }}
+            className="relative w-full flex flex-col"
           >
             <div className="absolute -inset-6 bg-gradient-to-br from-[#00d8df]/8 via-transparent to-[#00e676]/8 rounded-xl blur-2xl" />
 
-            <div className="mc-card p-6 space-y-5 bg-[#1f1f26]/95 relative overflow-hidden animate-float">
-              {/* Header */}
-              <div className="flex justify-between items-center border-b border-[#26262a] pb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#141419] border-2 border-[#ffbe00] rounded flex items-center justify-center font-mc-title text-sm text-mc-gold shadow-inner">
-                    G
+            <div className="mc-card p-6 space-y-5 bg-[#1f1f26]/95 relative overflow-hidden animate-float flex-1 flex flex-col justify-between">
+              <div>
+                {/* Header */}
+                <div className="flex justify-between items-center border-b border-[#26262a] pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#141419] border-2 border-[#ffbe00] rounded flex items-center justify-center font-mc-title text-sm text-mc-gold shadow-inner">
+                      G
+                    </div>
+                    <div>
+                      <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase">Quest Guild Board</h3>
+                      <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Guild Hall · Block B · Level 5 Explorer</p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase">Quest Guild Board</h3>
-                    <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Guild Hall · Block B · Level 5 Explorer</p>
+                  <div className="text-right">
+                    <div className="text-[8px] text-slate-500 font-mc-sub uppercase">XP Score</div>
+                    <div className="text-sm font-bold text-mc-gold font-mc-sub mt-0.5">720 PTS</div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="text-[8px] text-slate-500 font-mc-sub uppercase">XP Score</div>
-                  <div className="text-sm font-bold text-mc-gold font-mc-sub mt-0.5">720 PTS</div>
-                </div>
-              </div>
 
-              {/* Quick Stats */}
-              <div className="grid grid-cols-3 gap-3">
-                {[
-                  { label: 'Active Quests', value: '3', color: 'text-mc-cyan' },
-                  { label: 'Gate Passes', value: '2', color: 'text-emerald-400' },
-                  { label: 'Emerald Bank', value: '85', color: 'text-mc-gold' },
-                ].map(stat => (
-                  <div key={stat.label} className="mc-slot p-3 text-center space-y-1">
-                    <p className={`text-lg font-black font-mc-title ${stat.color}`}>{stat.value}</p>
-                    <p className="text-[7px] font-mc-sub text-slate-500 uppercase">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* XP Progress */}
-              <div className="space-y-1.5">
-                <div className="flex justify-between text-[8px] font-mc-sub text-slate-400 uppercase">
-                  <span>Level 5 Progress</span>
-                  <span className="text-mc-cyan">720 / 1200 XP</span>
+                {/* Quick Stats */}
+                <div className="grid grid-cols-3 gap-3 mt-4">
+                  {[
+                    { label: 'Active Quests', value: '3', color: 'text-mc-cyan' },
+                    { label: 'Gate Passes', value: '2', color: 'text-emerald-400' },
+                    { label: 'Emerald Bank', value: '85', color: 'text-mc-gold' },
+                  ].map(stat => (
+                    <div key={stat.label} className="mc-slot p-3 text-center space-y-1">
+                      <p className={`text-lg font-black font-mc-title ${stat.color}`}>{stat.value}</p>
+                      <p className="text-[7px] font-mc-sub text-slate-500 uppercase">{stat.label}</p>
+                    </div>
+                  ))}
                 </div>
-                <div className="w-full bg-[#141419] h-3 border border-[#3c3c44] p-0.5 rounded-sm">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: '60%' }}
-                    transition={{ delay: 0.8, duration: 1.5, ease: 'easeOut' }}
-                    className="bg-gradient-to-r from-mc-cyan to-emerald-400 h-full rounded-sm"
-                    style={{ boxShadow: '0 0 6px rgba(0,216,223,0.4)' }}
-                  />
+
+                {/* XP Progress */}
+                <div className="space-y-1.5 mt-4">
+                  <div className="flex justify-between text-[8px] font-mc-sub text-slate-400 uppercase">
+                    <span>Level 5 Progress</span>
+                    <span className="text-mc-cyan">720 / 1200 XP</span>
+                  </div>
+                  <div className="w-full bg-[#141419] h-3 border border-[#3c3c44] p-0.5 rounded-sm">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: '60%' }}
+                      transition={{ delay: 0.8, duration: 1.5, ease: 'easeOut' }}
+                      className="bg-gradient-to-r from-mc-cyan to-emerald-400 h-full rounded-sm"
+                      style={{ boxShadow: '0 0 6px rgba(0,216,223,0.4)' }}
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Today's Activity */}
-              <div className="border-t border-[#26262a] pt-4 space-y-2">
+              <div className="border-t border-[#26262a] pt-4 space-y-2 mt-4">
                 <p className="text-[8px] text-slate-500 font-mc-sub uppercase tracking-wider">Guild Activity Log</p>
                 {[
                   { icon: '🛡️', text: 'Warden outpass approved for weekend', status: 'Approved', statusColor: 'text-emerald-400' },
@@ -362,6 +321,68 @@ export const Landing: React.FC = () => {
               </div>
             </div>
           </motion.div>
+
+          {/* Right Column: Faction Select / Login Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, x: 30 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            transition={{ delay: 0.3, type: 'spring', stiffness: 60, damping: 15 }}
+            className="relative w-full flex flex-col"
+          >
+            <div className="absolute -inset-6 bg-gradient-to-br from-[#00e676]/8 via-transparent to-[#ffbe00]/8 rounded-xl blur-2xl" />
+
+            <div className="mc-card p-6 bg-[#1f1f26]/95 relative overflow-hidden flex flex-col justify-between flex-1">
+              <div>
+                {/* Header */}
+                <div className="border-b border-[#26262a] pb-4">
+                  <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase tracking-wider">Select Faction Portal</h3>
+                  <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Authenticate your identity to continue</p>
+                </div>
+
+                {/* Faction Selectors */}
+                <div className="space-y-4 mt-6">
+                  {/* Student Faction */}
+                  <div 
+                    onClick={() => handleRoleSelect(UserRole.STUDENT)}
+                    className="p-4 mc-slot hover:border-mc-cyan cursor-pointer transition-all duration-200 group flex items-start gap-4"
+                  >
+                    <div className="w-12 h-12 bg-[#2b2b35] border border-[#3c3c44] rounded group-hover:border-mc-cyan flex items-center justify-center text-mc-cyan shrink-0 transition-colors">
+                      <GraduationCap size={24} />
+                    </div>
+                    <div>
+                      <h4 className="text-[10px] font-bold text-white font-mc-title uppercase tracking-wide group-hover:text-mc-cyan transition-colors">Student Explorer</h4>
+                      <p className="text-[10px] text-slate-400 font-mono-readable mt-1 leading-normal">
+                        Submit complaints, apply for digital outpasses, find roommates, and claim XP/Emerald rewards.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Warden Faction */}
+                  <div 
+                    onClick={() => handleRoleSelect(UserRole.ADMIN)}
+                    className="p-4 mc-slot hover:border-mc-gold cursor-pointer transition-all duration-200 group flex items-start gap-4"
+                  >
+                    <div className="w-12 h-12 bg-[#2b2b35] border border-[#3c3c44] rounded group-hover:border-mc-gold flex items-center justify-center text-mc-gold shrink-0 transition-colors">
+                      <ShieldCheck size={24} />
+                    </div>
+                    <div>
+                      <h4 className="text-[10px] font-bold text-white font-mc-title uppercase tracking-wide group-hover:text-mc-gold transition-colors">Village Warden</h4>
+                      <p className="text-[10px] text-slate-400 font-mono-readable mt-1 leading-normal">
+                        Review gate pass scrolls, announce official village notices, and manage the campus guild.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Info Footer */}
+              <div className="border-t border-[#26262a] pt-4 mt-6 flex justify-between items-center text-[8px] font-mc-sub uppercase text-slate-500">
+                <span>Secure College Auth</span>
+                <span className="text-mc-cyan">v2.4-stable</span>
+              </div>
+            </div>
+          </motion.div>
+
         </div>
       </section>
 
