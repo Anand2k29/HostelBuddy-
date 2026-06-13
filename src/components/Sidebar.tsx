@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy, ShieldAlert, Ticket, Utensils } from 'lucide-react';
+import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy, ShieldAlert, Ticket } from 'lucide-react';
 import { User, UserRole } from '../types';
 import { motion } from 'framer-motion';
 
@@ -47,7 +47,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
           <>
             <NavItem to="/outpass" icon={<Ticket size={20} />} label={<span>Gate Pass <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">NEW</span></span>} />
             <NavItem to="/report" icon={<PlusCircle size={20} />} label="Report Issue" />
-            <NavItem to="/mess-menu" icon={<Utensils size={20} />} label="Mess Menu" />
             <NavItem to="/lost-found" icon={<Search size={20} />} label="Lost & Found" />
             {/* My Profile link is student specific too */}
             <NavItem to="/profile" icon={<UserIcon size={20} />} label="My Profile" />
