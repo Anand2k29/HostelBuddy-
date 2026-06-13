@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
+import { Navbar } from './components/Navbar';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
@@ -13,29 +14,28 @@ import { UserProfile } from './pages/UserProfile';
 import { User, UserRole, Issue, Announcement, LostItem } from './types';
 import { AnimatePresence } from 'framer-motion';
 import { INITIAL_ISSUES, INITIAL_ANNOUNCEMENTS, INITIAL_LOST_ITEMS } from './services/mockStore';
-import { ProtectedRoute } from './components/ProtectedRoute';
 import { Unauthorized } from './pages/Unauthorized';
 
-const ProtectedLayout: React.FC<{ user: User | null; onLogout: () => void }> = ({ user, onLogout }) => {
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-
+const ProtectedLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLogout }) => {
   return (
     <div className="flex min-h-screen bg-slate-50">
       <Sidebar user={user} onLogout={onLogout} />
-      <main className="flex-1 overflow-y-auto h-screen p-8 lg:p-12">
-        <div className="max-w-6xl mx-auto">
-          <Outlet />
-        </div>
-      </main>
+      <div className="flex-1 flex flex-col">
+        <Navbar user={user} onLogout={onLogout} />
+        <main className="flex-1 overflow-y-auto h-screen p-8 lg:p-12">
+          <div className="max-w-6xl mx-auto">
+            <Outlet />
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
 
-export default function App() {
+const AppContent: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  
+  const navigate = useNavigate();
+
   const [issues, setIssues] = useState<Issue[]>(INITIAL_ISSUES);
   const [announcements, setAnnouncements] = useState<Announcement[]>(INITIAL_ANNOUNCEMENTS);
   const [lostItems, setLostItems] = useState<LostItem[]>(INITIAL_LOST_ITEMS);
@@ -62,34 +62,41 @@ export default function App() {
 
   const handleLogin = (loggedInUser: User) => setUser(loggedInUser);
   const handleLogout = () => {
-    setUser(null)
+    setUser(null);
+    navigate('/');
   };
 
   return (
-    <Router>
-      <AnimatePresence mode="wait">
-        <Routes>
-          <Route path="/" element={!user ? <Landing /> : <Navigate to={user.role === UserRole.ADMIN ? '/admin' : '/dashboard'} />} />
-          <Route path="/login" element={!user ? <Login onLogin={handleLogin} /> : <Navigate to={user.role === UserRole.ADMIN ? '/admin' : '/dashboard'} />} />
-          <Route path="/unauthorized" element={<Unauthorized />} />
+    <AnimatePresence mode="wait">
+      <Routes>
+        <Route path="/" element={!user ? <Landing /> : <Navigate to={user.role === UserRole.ADMIN ? '/admin' : '/dashboard'} />} />
+        <Route path="/login" element={!user ? <Login onLogin={handleLogin} /> : <Navigate to={user.role === UserRole.ADMIN ? '/admin' : '/dashboard'} />} />
+        <Route path="/unauthorized" element={<Unauthorized />} />
 
+        {user && (
           <Route element={<ProtectedLayout user={user} onLogout={handleLogout} />}>
-            <Route element={<ProtectedRoute user={user} allowedRoles={[UserRole.ADMIN]} />}>
+            {user.role === UserRole.ADMIN && (
               <Route path="/admin" element={<AdminPanel issues={issues} onMerge={mergeIssues} />} />
-            </Route>
-            <Route element={<ProtectedRoute user={user} allowedRoles={[UserRole.STUDENT, UserRole.ADMIN]} />}>
-              <Route path="/dashboard" element={<Dashboard user={user!} issues={issues} announcements={announcements} />} />
-              <Route path="/profile" element={<UserProfile user={user!} issues={issues} />} />
-              <Route path="/issues" element={<IssueBoard user={user!} issues={issues} onUpdate={updateIssue} />} />
-              <Route path="/report" element={<ReportIssue user={user!} onReport={addIssue} />} />
-              <Route path="/announcements" element={<Announcements user={user!} data={announcements} />} />
-              <Route path="/lost-found" element={<LostFound items={lostItems} />} />
-            </Route>
+            )}
+            <Route path="/dashboard" element={<Dashboard user={user} issues={issues} announcements={announcements} />} />
+            <Route path="/profile" element={<UserProfile user={user} issues={issues} />} />
+            <Route path="/issues" element={<IssueBoard user={user} issues={issues} onUpdate={updateIssue} />} />
+            <Route path="/report" element={<ReportIssue user={user} onReport={addIssue} />} />
+            <Route path="/announcements" element={<Announcements user={user} data={announcements} />} />
+            <Route path="/lost-found" element={<LostFound items={lostItems} />} />
           </Route>
+        )}
 
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
-      </AnimatePresence>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
