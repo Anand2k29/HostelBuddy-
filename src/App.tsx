@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { HashRouter as Router, Routes, Route, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { Sidebar } from './components/Sidebar';
-import { Navbar } from './components/Navbar';
 import { Landing } from './pages/Landing';
 import { Login } from './pages/Login';
 import { Dashboard } from './pages/Dashboard';
@@ -20,14 +19,19 @@ import { Unauthorized } from './pages/Unauthorized';
 
 const ProtectedLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLogout }) => {
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <Sidebar user={user} onLogout={onLogout} />
-      <div className="flex-1 flex flex-col">
-        <Navbar user={user} onLogout={onLogout} />
-        <main className="flex-1 overflow-y-auto h-screen p-8 lg:p-12">
-          <div className="max-w-6xl mx-auto">
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
+      {/* Sidebar (Left) */}
+      {user && (
+         <>
+           <Sidebar user={user} onLogout={onLogout} />
+           {/* Mobile Menu Button - Optional: Add a small button here for mobile if needed, or just hide navbar for now */}
+         </>
+      )}
+
+      {/* Main Content (Right) */}
+      <div className="flex-1 flex flex-col overflow-hidden relative">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-slate-50 p-6 md:p-8">
             <Outlet />
-          </div>
         </main>
       </div>
     </div>
