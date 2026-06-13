@@ -4,8 +4,7 @@
 
 <div align="center">
   <a href="https://youtu.be/zZI7R--nfac" target="_blank">
-    <img src="![HB poster](https://github.com/user-attachments/assets/72ff0ca8-d174-4fb0-baa2-99f18778e1d8)
-" style="width: 100%; max-width: 800px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0,0,0,0.5);" alt="HostelBuddy Demo Video" />
+    <img src="https://github.com/user-attachments/assets/46388e1c-aaa6-4e09-b64a-3f728a5bb9a3" style="width: 100%; max-width: 800px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0,0,0,0.5);" alt="HostelBuddy Demo Video" />
   </a>
   
   <br />
