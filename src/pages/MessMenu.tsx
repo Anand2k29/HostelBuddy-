@@ -583,17 +583,17 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
               Try today's dinner recipe — <span className="text-mc-gold font-bold underline">Jeera Rice with Kadhi Pakora</span>, seasoned with home-ground portal spices!
             </p>
           </div>
-          <div className="btn-mc bg-[#f2ab13] text-[#141419] border-[#f2ab13] font-bold text-[9px] uppercase tracking-wider py-1 px-3">
+          <div className="btn-mc bg-[#f2ab13] text-[#141419] border-[#f2ab13] font-bold text-[11px] uppercase tracking-wider py-1 px-3">
             Tavern Pick ⭐
           </div>
         </div>
 
         {/* Chef Golem Command Log */}
         <div className="mc-card bg-[#1f1f26] border border-[#3c3c44] p-4 font-mono-readable flex flex-col justify-center">
-          <h4 className="text-[9px] font-black text-mc-cyan font-mc-title uppercase mb-2 flex items-center gap-1.5">
+          <h4 className="text-xs font-black text-mc-cyan font-mc-title uppercase mb-2 flex items-center gap-1.5">
             <span>🤖</span> Chef Golem Command Log
           </h4>
-          <div className="text-[9px] text-slate-400 space-y-1">
+          <div className="text-[10.5px] text-slate-400 space-y-1">
             {GOLEM_NOTICES.map((notice, idx) => (
               <div key={idx} className="flex gap-1.5 leading-relaxed">
                 <span className="text-[#00e676] shrink-0">►</span>
@@ -617,7 +617,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
           <button
             type="button"
             onClick={handleRavagePantry}
-            className="btn-mc py-1.5 px-3 text-[8px] uppercase font-bold bg-[#ef4444]/15 border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/25 shrink-0 self-end sm:self-auto"
+            className="btn-mc py-1.5 px-3 text-xs uppercase font-bold bg-[#ef4444]/15 border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/25 shrink-0 self-end sm:self-auto"
           >
             ⚡ Raid Kitchen Pantry (+rations)
           </button>
@@ -627,7 +627,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
           {/* Left Column: Pantry & Recipe Ledger (3 cols) */}
           <div className="lg:col-span-3 space-y-5">
             <div>
-              <h4 className="text-[9px] font-black text-slate-400 font-mc-sub uppercase mb-3.5 tracking-wider">Select Pantry Rations (Click to load Cauldron)</h4>
+              <h4 className="text-[11px] font-black text-slate-400 font-mc-sub uppercase mb-3.5 tracking-wider">Select Pantry Rations (Click to load Cauldron)</h4>
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 {Object.entries(pantry).map(([name, count]) => {
                   const itemEmoji = name.includes('Pepper') ? '🌶️' : name.includes('Mushroom') ? '🍄' : name.includes('Herb') ? '🌿' : name.includes('Egg') ? '🥚' : '🍯';
@@ -645,8 +645,8 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                       }`}
                     >
                       <span className="text-2xl mb-1">{itemEmoji}</span>
-                      <p className="text-[9px] font-bold font-mc-sub text-white leading-tight truncate w-full">{name.split(' ')[0]}</p>
-                      <span className={`text-[8px] font-mc-sub mt-1.5 px-2 py-0.5 rounded ${
+                      <p className="text-[11px] font-bold font-mc-sub text-white leading-tight truncate w-full">{name.split(' ')[0]}</p>
+                      <span className={`text-[10px] font-mc-sub mt-1.5 px-2 py-0.5 rounded ${
                         isAvailable ? 'bg-mc-cyan/10 text-mc-cyan border border-mc-cyan/25' : 'bg-slate-800 text-slate-600'
                       }`}>
                         Qty: {count}
@@ -659,10 +659,10 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
 
             {/* Brewing Recipe Ledger */}
             <div className="bg-[#141419]/50 border border-[#26262a] rounded p-3 space-y-2">
-              <h5 className="text-[8px] font-black text-mc-gold font-mc-sub uppercase tracking-widest flex items-center gap-1.5">
+              <h5 className="text-[10px] font-black text-mc-gold font-mc-sub uppercase tracking-widest flex items-center gap-1.5">
                 <Sparkles size={10} /> Cauldron Recipe Ledger
               </h5>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[8px] font-mono-readable text-slate-405">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[10px] font-mono-readable text-slate-400">
                 <div className="flex items-center gap-1.5">
                   <span className="text-mc-cyan font-bold">🌶️ + 🥚 + 🍯</span>
                   <span>➔ Dragonfire Honey Glaze (+35XP, Speed II)</span>
@@ -693,14 +693,14 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
 
             <div className="z-10 w-full space-y-3">
               <div className="flex justify-between items-center border-b border-[#26262a] pb-2 w-full">
-                <span className="text-[8px] font-mc-sub text-slate-500 uppercase tracking-widest">Cauldron Slots (Max 3)</span>
+                <span className="text-[10px] font-mc-sub text-slate-500 uppercase tracking-widest">Cauldron Slots (Max 3)</span>
                 {cauldronSlots.length > 0 && !isBrewing && (
                   <button 
                     onClick={() => {
                       cauldronSlots.forEach((_, idx) => removeIngredientFromCauldron(0));
                       setCauldronSlots([]);
                     }}
-                    className="text-[8px] text-[#ef4444] font-mc-sub hover:underline cursor-pointer flex items-center gap-1"
+                    className="text-[10px] text-[#ef4444] font-mc-sub hover:underline cursor-pointer flex items-center gap-1"
                   >
                     <RotateCcw size={8} /> Reset Cauldron
                   </button>
@@ -731,7 +731,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                           <span className="absolute -top-1.5 -right-1.5 bg-[#ef4444] text-white text-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">✕</span>
                         </>
                       ) : (
-                        <span className="text-[9px] text-slate-600 font-mc-sub">Empty</span>
+                        <span className="text-xs text-slate-505 font-mc-sub">Empty</span>
                       )}
                     </button>
                   );
@@ -743,7 +743,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
             <div className="z-10 w-full pt-4 border-t border-[#26262a] flex flex-col items-center justify-center">
               {isBrewing ? (
                 <div className="w-full space-y-2.5">
-                  <div className="flex justify-between items-center text-[8px] font-mc-sub uppercase text-[#ffbe00]">
+                  <div className="flex justify-between items-center text-[10px] font-mc-sub uppercase text-[#ffbe00]">
                     <span className="animate-pulse">{brewText}</span>
                     <span>Brewing...</span>
                   </div>
@@ -760,11 +760,11 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                   animate={{ scale: 1, opacity: 1 }}
                   className="space-y-1.5"
                 >
-                  <p className="text-[8px] font-mc-sub text-[#00e676] uppercase tracking-wider font-bold">Successfully Brewed!</p>
+                  <p className="text-[10px] font-mc-sub text-[#00e676] uppercase tracking-wider font-bold">Successfully Brewed!</p>
                   <h4 className="text-xs font-black text-[#ffbe00] font-mc-title uppercase tracking-wide flex items-center justify-center gap-1.5">
                     <span>{brewedResult.icon}</span> {brewedResult.name}
                   </h4>
-                  <p className="text-[8px] text-slate-400 font-mono-readable">
+                  <p className="text-[10.5px] text-slate-400 font-mono-readable">
                     Gained +{brewedResult.xp} XP, +{brewedResult.coins} Emeralds, and active {brewedResult.buff} buff!
                   </p>
                 </motion.div>
@@ -773,7 +773,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                   type="button"
                   disabled={cauldronSlots.length === 0}
                   onClick={handleBrewRation}
-                  className={`btn-mc w-full py-2.5 uppercase text-[9px] font-bold flex items-center justify-center gap-2 ${
+                  className={`btn-mc w-full py-2.5 uppercase text-xs font-bold flex items-center justify-center gap-2 ${
                     cauldronSlots.length > 0 
                       ? 'bg-mc-cyan text-black border-mc-cyan glow-cta' 
                       : 'bg-zinc-800 text-zinc-500 border-zinc-950 opacity-50 cursor-not-allowed'
@@ -827,7 +827,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
               >
                 <div className="p-5 relative">
                   {isServingNow && (
-                    <div className="absolute top-4 right-4 bg-[#00e676] text-black text-[8px] font-mc-title font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
+                    <div className="absolute top-4 right-4 bg-[#00e676] text-black text-[10px] font-mc-title font-bold px-2 py-0.5 rounded shadow-sm flex items-center gap-1">
                       <span className="w-1 h-1 bg-black rounded-full animate-ping" />
                       NOW SERVING
                     </div>
@@ -835,14 +835,14 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
 
                   <div className="flex justify-between items-center mb-4">
                     <div>
-                      <h3 className="text-xs font-black text-white font-mc-title uppercase">{meal.name}</h3>
-                      <p className="text-[10px] text-slate-500 font-mono-readable flex items-center gap-1.5 mt-1.5">
+                      <h3 className="text-sm font-black text-white font-mc-title uppercase tracking-wide">{meal.name}</h3>
+                      <p className="text-xs text-slate-400 font-mono-readable flex items-center gap-1.5 mt-1.5">
                         <Clock size={12} />
                         {meal.time}
                       </p>
                     </div>
                     {!isServingNow && (
-                      <span className={`px-2 py-0.5 rounded text-[8px] font-bold font-mc-sub uppercase border ${
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold font-mc-sub uppercase border ${
                         mealKey === 'Breakfast' ? 'bg-[#ffbe00]/10 text-[#ffbe00] border-[#ffbe00]/30' :
                         mealKey === 'Lunch' ? 'bg-[#00d8df]/10 text-[#00d8df] border-[#00d8df]/30' :
                         mealKey === 'Snacks' ? 'bg-orange-500/10 text-orange-400 border-orange-500/30' :
@@ -859,7 +859,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                     {meal.items.map((item, idx) => {
                       const rpgStats = getItemRPGStats(item);
                       return (
-                        <li key={idx} className="flex flex-col gap-1 text-xs font-mono-readable">
+                        <li key={idx} className="flex flex-col gap-1 text-sm font-mono-readable">
                           <div className="flex items-center space-x-2.5 text-slate-300">
                             <div className="w-1.5 h-1.5 rounded-sm bg-mc-cyan shrink-0"></div>
                             <span>{item}</span>
@@ -867,14 +867,14 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                           
                           {/* RPG Stat Indicators */}
                           <div className="flex items-center gap-2 pl-4 flex-wrap mt-0.5">
-                            <span className="text-[10px] flex items-center tracking-tight text-orange-400 select-none">
+                            <span className="text-xs flex items-center tracking-tight text-orange-400 select-none">
                               {Array.from({ length: rpgStats.hunger }).map((_, i) => '🍗').join('')}
                             </span>
-                            <span className="text-[10px] flex items-center tracking-tight text-red-500 select-none">
+                            <span className="text-xs flex items-center tracking-tight text-red-500 select-none">
                               {Array.from({ length: rpgStats.hearts }).map((_, i) => '❤️').join('')}
                             </span>
                             {rpgStats.buff && (
-                              <span className={`px-1.5 py-0.5 rounded text-[8px] border font-bold uppercase font-mc-sub scale-90 origin-left ${rpgStats.buffColor}`}>
+                              <span className={`px-1.5 py-0.5 rounded text-[10px] border font-bold uppercase font-mc-sub scale-90 origin-left ${rpgStats.buffColor}`}>
                                 {rpgStats.buff}
                               </span>
                             )}
@@ -904,18 +904,18 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                         <button
                           disabled={hasBeenEaten}
                           onClick={() => handleEatMeal(mealKey)}
-                          className="btn-mc flex-1 uppercase text-[10px] py-1.5 px-3 bg-[#00e676] text-black border-[#00e676] hover:bg-[#00e676]/90 disabled:opacity-50"
+                          className="btn-mc flex-1 uppercase text-xs py-1.5 px-3 bg-[#00e676] text-black border-[#00e676] hover:bg-[#00e676]/90 disabled:opacity-50"
                         >
                           {hasBeenEaten ? '✓ Diet Logged' : '🍖 Consume Diet'}
                         </button>
                       ) : (
-                        <span className="text-[8px] font-mc-sub text-slate-500 uppercase">Rate Menu Flavor</span>
+                        <span className="text-[10px] font-mc-sub text-slate-400 uppercase tracking-wide">Rate Menu Flavor</span>
                       )}
 
                       <div className="flex items-center space-x-2 shrink-0">
                         <button
                           onClick={() => handleVote(selectedDay, mealKey, 'LIKE')}
-                          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded text-[9px] font-bold font-mc-sub transition-all border ${
+                          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded text-xs font-bold font-mc-sub transition-all border ${
                             meal.userVoted === 'LIKE'
                               ? 'bg-[#00e676]/25 border-[#00e676] text-[#00e676]'
                               : 'bg-[#1f1f26] hover:bg-[#2b2b35] text-slate-400 border-[#26262a]'
@@ -926,7 +926,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                         </button>
                         <button
                           onClick={() => handleVote(selectedDay, mealKey, 'DISLIKE')}
-                          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded text-[9px] font-bold font-mc-sub transition-all border ${
+                          className={`flex items-center space-x-1.5 px-3 py-1.5 rounded text-xs font-bold font-mc-sub transition-all border ${
                             meal.userVoted === 'DISLIKE'
                               ? 'bg-red-500/25 border-red-500 text-red-400'
                               : 'bg-[#1f1f26] hover:bg-[#2b2b35] text-slate-400 border-[#26262a]'

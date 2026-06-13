@@ -61,11 +61,11 @@ const GatePassCard: React.FC<{ pass: IGatePass }> = ({ pass }) => {
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1.5">
               <span className="text-lg">{leaveInfo.icon}</span>
-              <p className="text-[10px] font-bold text-white font-mc-sub uppercase truncate">{pass.studentName}</p>
+              <p className="text-xs font-bold text-white font-mc-sub uppercase truncate">{pass.studentName}</p>
             </div>
-            <p className="text-[9px] text-slate-500 font-mono-readable">Room {pass.roomNumber} · ID: {pass.id.slice(0, 8)}</p>
+            <p className="text-[11px] text-slate-500 font-mono-readable">Room {pass.roomNumber} · ID: {pass.id.slice(0, 8)}</p>
           </div>
-          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[8px] font-mc-sub uppercase font-bold border ${s.bg} ${s.text} ${s.border} shrink-0`}>
+          <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[10px] font-mc-sub uppercase font-bold border ${s.bg} ${s.text} ${s.border} shrink-0`}>
             {s.icon}
             <span>{s.label}</span>
           </div>
@@ -88,7 +88,7 @@ const GatePassCard: React.FC<{ pass: IGatePass }> = ({ pass }) => {
                   >
                     {isRejectedFinal ? '❌' : step.icon}
                   </div>
-                  <p className="text-[7px] font-mc-sub uppercase mt-1.5 tracking-wider" style={{ color: isActive ? dotColor : '#64748b' }}>
+                  <p className="text-[9px] font-mc-sub uppercase mt-1.5 tracking-wider" style={{ color: isActive ? dotColor : '#64748b' }}>
                     {isRejectedFinal ? 'Incinerated' : step.label}
                   </p>
                 </div>
@@ -103,20 +103,20 @@ const GatePassCard: React.FC<{ pass: IGatePass }> = ({ pass }) => {
         {/* Details Grid */}
         <div className="mt-5 grid grid-cols-2 gap-3 border-t border-[#26262a] pt-4">
           <div>
-            <p className="text-[8px] text-slate-500 font-mc-sub uppercase">Portal Outbound</p>
-            <p className="text-[10px] text-slate-300 font-mono-readable mt-1">{new Date(pass.departureDate).toLocaleString()}</p>
+            <p className="text-[10px] text-slate-500 font-mc-sub uppercase">Portal Outbound</p>
+            <p className="text-xs text-slate-300 font-mono-readable mt-1">{new Date(pass.departureDate).toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[8px] text-slate-500 font-mc-sub uppercase">Portal Return</p>
-            <p className="text-[10px] text-slate-300 font-mono-readable mt-1">{new Date(pass.returnDate).toLocaleString()}</p>
+            <p className="text-[10px] text-slate-500 font-mc-sub uppercase">Portal Return</p>
+            <p className="text-xs text-slate-300 font-mono-readable mt-1">{new Date(pass.returnDate).toLocaleString()}</p>
           </div>
           <div>
-            <p className="text-[8px] text-slate-500 font-mc-sub uppercase">Route Type</p>
-            <p className="text-[10px] font-mono-readable mt-1" style={{ color: leaveInfo.color }}>{leaveInfo.name}</p>
+            <p className="text-[10px] text-slate-500 font-mc-sub uppercase">Route Type</p>
+            <p className="text-xs font-mono-readable mt-1" style={{ color: leaveInfo.color }}>{leaveInfo.name}</p>
           </div>
           <div>
-            <p className="text-[8px] text-slate-500 font-mc-sub uppercase">Quest Scroll</p>
-            <p className="text-[10px] text-slate-300 font-mono-readable mt-1 truncate">{pass.reason}</p>
+            <p className="text-[10px] text-slate-500 font-mc-sub uppercase">Quest Scroll</p>
+            <p className="text-xs text-slate-300 font-mono-readable mt-1 truncate">{pass.reason}</p>
           </div>
         </div>
       </div>
@@ -131,10 +131,10 @@ const GatePassCard: React.FC<{ pass: IGatePass }> = ({ pass }) => {
             </div>
           </div>
           <div className="text-center">
-            <p className="text-[10px] font-mc-title text-[#00e676] uppercase font-bold tracking-wide flex items-center gap-1.5">
+            <p className="text-xs font-mc-title text-[#00e676] uppercase font-bold tracking-wide flex items-center justify-center gap-1.5">
               <Shield size={12} /> Portal Pass Key — Verified
             </p>
-            <p className="text-[9px] text-slate-500 font-mono-readable mt-1">Present this artifact at the campus gate outpost</p>
+            <p className="text-[11px] text-slate-500 font-mono-readable mt-1">Present this artifact at the campus gate outpost</p>
           </div>
         </div>
       )}
@@ -321,8 +321,8 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
             <div className="bg-[#141419] border border-[#3c3c44] rounded p-3 flex items-center gap-3">
               <span className="text-xl">{selectedLeave.icon}</span>
               <div className="flex-1 min-w-0">
-                <p className="text-[11px] font-mc-sub uppercase font-bold" style={{ color: selectedLeave.color }}>{selectedLeave.name}</p>
-                <p className="text-[10px] text-slate-500 font-mono-readable">{selectedLeave.desc}</p>
+                <p className="text-xs font-mc-sub uppercase font-bold" style={{ color: selectedLeave.color }}>{selectedLeave.name}</p>
+                <p className="text-[11px] text-slate-500 font-mono-readable">{selectedLeave.desc}</p>
               </div>
               <Zap size={14} style={{ color: selectedLeave.color }} className="shrink-0" />
             </div>
@@ -330,7 +330,7 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
             {/* Submit / Forging State */}
             {isForging ? (
               <div className="space-y-3 py-2">
-                <div className="flex justify-between items-center text-[9px] font-mc-sub uppercase text-[#ffbe00]">
+                <div className="flex justify-between items-center text-xs font-mc-sub uppercase text-[#ffbe00]">
                   <span className="animate-pulse">{forgeText}</span>
                   <span>Forging...</span>
                 </div>
@@ -341,7 +341,7 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
             ) : (
               <button
                 type="submit"
-                className="btn-mc w-full flex items-center justify-center gap-2 py-3 uppercase text-[10px] glow-cta"
+                className="btn-mc w-full flex items-center justify-center gap-2 py-3 uppercase text-xs glow-cta"
               >
                 <Sparkles size={14} />
                 Inscribe Portal Rune
@@ -355,7 +355,7 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
           <div className="mc-card bg-[#1f1f26]/90 p-5 space-y-4">
             <div className="border-b border-[#26262a] pb-3 flex justify-between items-center">
               <h3 className="text-xs font-black text-white font-mc-title uppercase">Passage Archive</h3>
-              <span className="text-[9px] text-[#00d8df] font-mc-sub uppercase tracking-wider">Scroll Records</span>
+              <span className="text-xs text-[#00d8df] font-mc-sub uppercase tracking-wider">Scroll Records</span>
             </div>
             
             <div className="space-y-5 max-h-[800px] overflow-y-auto pr-1">
@@ -365,7 +365,7 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
                 <div className="text-center py-12">
                   <MapPin size={32} className="mx-auto text-slate-600 mb-4 animate-bounce" />
                   <h3 className="text-xs font-mc-title text-slate-400 uppercase">No Portal Runes Found</h3>
-                  <p className="text-[10px] text-slate-500 font-mono-readable mt-2">You haven't forged any passage runes yet.</p>
+                  <p className="text-xs text-slate-500 font-mono-readable mt-2">You haven't forged any passage runes yet.</p>
                 </div>
               )}
             </div>
