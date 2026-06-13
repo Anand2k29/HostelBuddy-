@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { mockSignInWithGoogle, mockSignInWithEmail } from '../services/authService';
 import { User, UserRole } from '../types';
 import { Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
@@ -15,17 +15,25 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const selectedRoleFromLanding = (location.state as { role?: UserRole })?.role || UserRole.STUDENT;
+
+  const handleAuthSuccess = (user: User) => {
+    // Force overwrite the role with the one selected on the Landing page
+    const userWithSelectedRole: User = { ...user, role: selectedRoleFromLanding };
+    onLogin(userWithSelectedRole);
+    if (userWithSelectedRole.role === UserRole.ADMIN) {
+      navigate('/admin');
+    } else {
+      navigate('/dashboard');
+    }
+  };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
       const user = await mockSignInWithGoogle();
-      onLogin(user);
-      if (user.role === UserRole.ADMIN) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      handleAuthSuccess(user);
     } catch (error) {
       console.error(error);
     } finally {
@@ -38,12 +46,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setIsLoading(true);
     try {
       const user = await mockSignInWithEmail(email);
-      onLogin(user);
-      if (user.role === UserRole.ADMIN) {
-        navigate('/admin');
-      } else {
-        navigate('/dashboard');
-      }
+      handleAuthSuccess(user);
     } catch (error) {
       console.error(error);
     } finally {
