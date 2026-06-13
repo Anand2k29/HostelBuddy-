@@ -81,31 +81,90 @@ const getMealFromQuery = (q: string): string => {
   return '';
 };
 
+const isOpenRouterKey = (key: string) => {
+  return key.startsWith('sk-or-') || key.startsWith('sk-');
+};
+
 export const analyzeIssueWithAI = async (description: string, apiKey: string) => {
   if (!apiKey) {
     console.warn("No API Key provided for Gemini");
     return null;
   }
 
+  const prompt = `
+    Analyze the following hostel issue description provided by a student.
+    Determine the most appropriate CATEGORY from: [WIFI, PLUMBING, ELECTRICAL, FURNITURE, CLEANING, OTHER].
+    Determine the PRIORITY from: [LOW, MEDIUM, HIGH, CRITICAL] based on urgency and impact.
+    Provide a brief 1-sentence summary.
+    
+    Description: "${description}"
+    
+    Respond STRICTLY in this JSON format:
+    {
+      "category": "CATEGORY_NAME",
+      "priority": "PRIORITY_LEVEL",
+      "summary": "Brief summary here"
+    }
+  `;
+
+  if (isOpenRouterKey(apiKey)) {
+    try {
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "HostelBuddy"
+        },
+        body: JSON.stringify({
+          model: "google/gemma-2-9b-it:free",
+          messages: [
+            { role: "user", content: prompt }
+          ]
+        })
+      });
+
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content;
+      if (!text) return null;
+
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      const jsonStr = jsonMatch ? jsonMatch[0] : text;
+      
+      return JSON.parse(jsonStr) as { category: IssueCategory, priority: IssuePriority, summary: string };
+    } catch (error) {
+      console.error("OpenRouter analysis failed, trying fallback:", error);
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: "meta-llama/llama-3.1-8b-instruct:free",
+            messages: [
+              { role: "user", content: prompt }
+            ]
+          })
+        });
+        const data = await response.json();
+        const text = data.choices?.[0]?.message?.content;
+        if (!text) return null;
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        const jsonStr = jsonMatch ? jsonMatch[0] : text;
+        return JSON.parse(jsonStr) as { category: IssueCategory, priority: IssuePriority, summary: string };
+      } catch (innerError) {
+        console.error("OpenRouter fallback analysis failed:", innerError);
+        return null;
+      }
+    }
+  }
+
   try {
     const ai = new GoogleGenAI({ apiKey });
     
-    const prompt = `
-      Analyze the following hostel issue description provided by a student.
-      Determine the most appropriate CATEGORY from: [WIFI, PLUMBING, ELECTRICAL, FURNITURE, CLEANING, OTHER].
-      Determine the PRIORITY from: [LOW, MEDIUM, HIGH, CRITICAL] based on urgency and impact.
-      Provide a brief 1-sentence summary.
-      
-      Description: "${description}"
-      
-      Respond STRICTLY in this JSON format:
-      {
-        "category": "CATEGORY_NAME",
-        "priority": "PRIORITY_LEVEL",
-        "summary": "Brief summary here"
-      }
-    `;
-
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: prompt,
@@ -184,7 +243,78 @@ export const chatWithAI = async (
     return "Hmmn? That's an interesting question! I am running in local mock scribe mode because no Gemini API key is configured. If you set `VITE_API_KEY` in your environment, I can answer any general questions with live AI intelligence!";
   }
 
-  // 3. Live AI Execution (passing menu context to Gemini so it has grounding!)
+  const systemInstruction = `
+    You are HostelBuddy AI Scribe, designed in the style of a wise Minecraft Librarian Villager. 
+    You speak with a touch of game lore (using words like 'scrolls', 'emeralds', 'overlords' for admins, 'travelers' for students, 'tomes' for rules, 'quests' for complaints).
+    You are helpful, polite, and witty.
+    
+    You have access to the hostel's official weekly mess menu data:
+    ${JSON.stringify(WEEKLY_MENU_DATABASE, null, 2)}
+    
+    Timings: Breakfast (7:30-9:00 AM, Sun: 8:00-9:30 AM), Lunch (12:30-2:00 PM, Sun: 12:30-2:30 PM), Snacks (5:00-6:00 PM), Dinner (7:30-9:00 PM).
+    
+    You answer questions about hostel rules, outpasses, lost and found, and general hostel life. Keep your responses practical and formatted with clean markdown.
+  `;
+
+  // 3. OpenRouter Execution
+  if (isOpenRouterKey(apiKey)) {
+    try {
+      const formattedMessages = [
+        { role: "system", content: systemInstruction },
+        ...messages.map(m => ({
+          role: m.role === 'model' ? 'assistant' : 'user',
+          content: m.text
+        }))
+      ];
+
+      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "HostelBuddy"
+        },
+        body: JSON.stringify({
+          model: "google/gemma-2-9b-it:free",
+          messages: formattedMessages
+        })
+      });
+
+      const data = await response.json();
+      const text = data.choices?.[0]?.message?.content;
+      return text || "Hmm. I couldn't read that scroll. Try again?";
+    } catch (error) {
+      console.error("OpenRouter chat failed, attempting fallback:", error);
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apiKey}`
+          },
+          body: JSON.stringify({
+            model: "meta-llama/llama-3.1-8b-instruct:free",
+            messages: [
+              { role: "system", content: systemInstruction },
+              ...messages.map(m => ({
+                role: m.role === 'model' ? 'assistant' : 'user',
+                content: m.text
+              }))
+            ]
+          })
+        });
+        const data = await response.json();
+        const text = data.choices?.[0]?.message?.content;
+        return text || "Hmm. My parchment transmission broke. Try again?";
+      } catch (innerErr) {
+        console.error("OpenRouter fallback chat failed:", innerErr);
+        return "Oops! My redstone repeater disconnected from my AI core. Please try again.";
+      }
+    }
+  }
+
+  // 4. Live AI Execution (Gemini API SDK)
   try {
     const ai = new GoogleGenAI({ apiKey });
     const contents = messages.map(m => ({
@@ -192,19 +322,6 @@ export const chatWithAI = async (
       parts: [{ text: m.text }]
     }));
     
-    const systemInstruction = `
-      You are HostelBuddy AI Scribe, designed in the style of a wise Minecraft Librarian Villager. 
-      You speak with a touch of game lore (using words like 'scrolls', 'emeralds', 'overlords' for admins, 'travelers' for students, 'tomes' for rules, 'quests' for complaints).
-      You are helpful, polite, and witty.
-      
-      You have access to the hostel's official weekly mess menu data:
-      ${JSON.stringify(WEEKLY_MENU_DATABASE, null, 2)}
-      
-      Timings: Breakfast (7:30-9:00 AM, Sun: 8:00-9:30 AM), Lunch (12:30-2:00 PM, Sun: 12:30-2:30 PM), Snacks (5:00-6:00 PM), Dinner (7:30-9:00 PM).
-      
-      You answer questions about hostel rules, outpasses, lost and found, and general hostel life. Keep your responses practical and formatted with clean markdown.
-    `;
-
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: contents,

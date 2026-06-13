@@ -17,9 +17,10 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const selectedRoleFromLanding = (location.state as { role?: UserRole })?.role || UserRole.STUDENT;
+  const [activeRole, setActiveRole] = useState<UserRole>(selectedRoleFromLanding);
 
   const handleAuthSuccess = (user: User) => {
-    const userWithSelectedRole: User = { ...user, role: selectedRoleFromLanding };
+    const userWithSelectedRole: User = { ...user, role: activeRole };
     onLogin(userWithSelectedRole);
     if (userWithSelectedRole.role === UserRole.ADMIN) {
       navigate('/admin');
@@ -32,7 +33,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setIsLoading(true);
     try {
       let user = await mockSignInWithGoogle();
-      if (selectedRoleFromLanding === UserRole.ADMIN) {
+      if (activeRole === UserRole.ADMIN) {
         user = {
           ...user,
           name: "Warden Suresh Reddy",
@@ -127,13 +128,43 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-sm mc-card bg-[#1f1f26] p-8 shadow-2xl relative"
+          className={`w-full max-w-sm mc-card bg-[#1f1f26] p-8 shadow-2xl relative transition-all duration-300 border-3 ${
+            activeRole === UserRole.STUDENT 
+              ? 'border-[#00d8df]/30 hover:border-[#00d8df]/60 shadow-[0_0_20px_rgba(0,216,223,0.05)]' 
+              : 'border-[#ffbe00]/30 hover:border-[#ffbe00]/60 shadow-[0_0_20px_rgba(255,190,0,0.05)]'
+          }`}
         >
           <div className="absolute inset-0 scanline opacity-5 pointer-events-none"></div>
           
-          <motion.div variants={itemVariants} className="mb-6 text-center">
+          <motion.div variants={itemVariants} className="mb-5 text-center">
             <h2 className="text-lg font-black text-white font-mc-title uppercase tracking-wide">Enter Lobby</h2>
             <p className="text-[10px] text-slate-500 font-mono-readable uppercase tracking-widest mt-1.5">Enter credentials to load server credentials</p>
+          </motion.div>
+
+          {/* Segmented Tab Selector */}
+          <motion.div variants={itemVariants} className="flex p-1 bg-[#141419]/80 rounded border border-[#26262a] mb-6">
+            <button
+              type="button"
+              onClick={() => setActiveRole(UserRole.STUDENT)}
+              className={`flex-1 py-2 text-[8px] font-mc-sub uppercase tracking-wider transition-all rounded cursor-pointer ${
+                activeRole === UserRole.STUDENT
+                  ? 'bg-[#2b2b35] text-mc-cyan font-bold border border-[#3c3c44] shadow-inner'
+                  : 'text-slate-500 hover:text-slate-350'
+              }`}
+            >
+              Student Account
+            </button>
+            <button
+              type="button"
+              onClick={() => setActiveRole(UserRole.ADMIN)}
+              className={`flex-1 py-2 text-[8px] font-mc-sub uppercase tracking-wider transition-all rounded cursor-pointer ${
+                activeRole === UserRole.ADMIN
+                  ? 'bg-[#2b2b35] text-mc-gold font-bold border border-[#3c3c44] shadow-inner'
+                  : 'text-slate-500 hover:text-slate-350'
+              }`}
+            >
+              Warden Panel
+            </button>
           </motion.div>
 
           {/* Google Login button */}
@@ -141,7 +172,9 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             variants={itemVariants}
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="btn-mc w-full flex items-center justify-center space-x-3 mb-6 uppercase text-[10px]"
+            className={`btn-mc w-full flex items-center justify-center space-x-3 mb-6 uppercase text-[10px] ${
+              activeRole === UserRole.ADMIN ? 'hover:!bg-[#ffbe00] hover:!text-black hover:!shadow-[inset_2px_2px_0px_#ffe47e,inset_-2px_-2px_0px_#a67c00]' : ''
+            }`}
           >
             {isLoading ? (
               <Loader2 className="animate-spin" size={14} />
@@ -170,7 +203,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#141419] border border-[#26262a] text-[#f1f5f9] rounded focus:outline-none focus:border-mc-cyan/50 text-xs transition-all placeholder:text-slate-600 outline-none"
+                className={`w-full px-3.5 py-2.5 bg-[#141419] border border-[#26262a] text-[#f1f5f9] rounded text-xs transition-all placeholder:text-slate-600 outline-none ${
+                  activeRole === UserRole.STUDENT 
+                    ? 'focus:!border-mc-cyan focus:!shadow-[0_0_8px_rgba(0,216,223,0.15)]' 
+                    : 'focus:!border-mc-gold focus:!shadow-[0_0_8px_rgba(255,190,0,0.15)]'
+                }`}
                 placeholder="you@college.edu"
               />
             </motion.div>
@@ -182,7 +219,11 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-[#141419] border border-[#26262a] text-[#f1f5f9] rounded focus:outline-none focus:border-mc-cyan/50 text-xs transition-all placeholder:text-slate-600 outline-none pr-10"
+                className={`w-full px-3.5 py-2.5 bg-[#141419] border border-[#26262a] text-[#f1f5f9] rounded text-xs transition-all placeholder:text-slate-600 outline-none pr-10 ${
+                  activeRole === UserRole.STUDENT 
+                    ? 'focus:!border-mc-cyan focus:!shadow-[0_0_8px_rgba(0,216,223,0.15)]' 
+                    : 'focus:!border-mc-gold focus:!shadow-[0_0_8px_rgba(255,190,0,0.15)]'
+                }`}
                 placeholder="••••••••"
               />
               <button
@@ -195,14 +236,23 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </motion.div>
             
             <motion.div variants={itemVariants} className="flex items-center justify-between text-[11px] pt-1">
-                <a href="#" className="font-semibold text-mc-cyan hover:underline uppercase tracking-wide text-[10px]">Forgot Key?</a>
+                <a 
+                  href="#" 
+                  className={`font-semibold hover:underline uppercase tracking-wide text-[10px] ${
+                    activeRole === UserRole.STUDENT ? 'text-mc-cyan' : 'text-mc-gold'
+                  }`}
+                >
+                  Forgot Key?
+                </a>
             </motion.div>
 
             <motion.div variants={itemVariants} className="pt-2">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="btn-mc w-full flex items-center justify-center space-x-2 uppercase py-3 text-[10px]"
+                className={`btn-mc w-full flex items-center justify-center space-x-2 uppercase py-3 text-[10px] ${
+                  activeRole === UserRole.ADMIN ? 'hover:!bg-[#ffbe00] hover:!text-black hover:!shadow-[inset_2px_2px_0px_#ffe47e,inset_-2px_-2px_0px_#a67c00]' : ''
+                }`}
               >
                 <span>{isLoading ? 'Loading...' : 'Sign In'}</span>
                 {!isLoading && <ArrowRight size={14} />}
@@ -211,7 +261,15 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </form>
 
           <motion.p variants={itemVariants} className="mt-6 text-center text-[10px] text-slate-500 uppercase tracking-widest">
-            First login? <a href="#" className="font-bold text-mc-cyan hover:underline">Deploy account</a>
+            First login?{' '}
+            <a 
+              href="#" 
+              className={`font-bold hover:underline ${
+                activeRole === UserRole.STUDENT ? 'text-mc-cyan' : 'text-mc-gold'
+              }`}
+            >
+              Deploy account
+            </a>
           </motion.p>
         </motion.div>
       </div>
