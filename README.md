@@ -8,7 +8,7 @@
   <b>🎥 Click the image above to watch the demo video</b>
 </div>
 
-> *Click the image above to play the video demo.*
+
 
 ## 📖 About The Project
 
