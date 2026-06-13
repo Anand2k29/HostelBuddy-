@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy, ShieldAlert } from 'lucide-react';
+import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy, ShieldAlert, Ticket } from 'lucide-react';
 import { User, UserRole } from '../types';
 import { motion } from 'framer-motion';
 
@@ -45,6 +45,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
         <NavItem to="/report" icon={<PlusCircle size={20} />} label="Report Issue" />
         <NavItem to="/announcements" icon={<Bell size={20} />} label="Announcements" />
         <NavItem to="/lost-found" icon={<Search size={20} />} label="Lost & Found" />
+        <NavItem to="/outpass" icon={<Ticket size={20} />} label="Gate Pass" />
         
         {user.role === UserRole.ADMIN && (
           <div className="pt-4 mt-2">

@@ -107,7 +107,7 @@ export const AntiRagging: React.FC<AntiRaggingProps> = ({ user, onReport }) => {
           </div>
           
           <div className="relative">
-            <label htmlFor="location" className="block text-sm font-medium text-slate-700 mb-2">Location of Incident</p>
+            <label htmlFor="location" className="block text-sm font-medium text-slate-700 mb-2">Location of Incident</label>
             <div className="absolute left-3 top-10">
                 <MapPin size={16} className="text-slate-400" />
             </div>

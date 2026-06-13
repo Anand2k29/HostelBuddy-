@@ -1,4 +1,4 @@
-import { Issue, IssueCategory, IssuePriority, IssueStatus, User, UserRole, Announcement, LostItem } from '../types';
+import { Issue, IssueCategory, IssuePriority, IssueStatus, User, UserRole, Announcement, LostItem, GatePass, GatePassStatus, LeaveType } from '../types';
 
 // Initial Mock Data
 export const INITIAL_USER: User = {
@@ -107,7 +107,46 @@ export const INITIAL_LOST_ITEMS: LostItem[] = [
     location: '2nd Floor Stairs',
     type: 'FOUND',
     status: 'OPEN',
-    contact: 'Reception',
-    date: '2023-10-25'
-  }
-];
+        contact: 'Reception',
+        date: '2023-10-25'
+      }
+    ];
+    
+    export const INITIAL_GATE_PASSES: GatePass[] = [
+        {
+            id: 'gp1',
+            studentId: 'u1',
+            studentName: 'Alex Johnson',
+            roomNumber: '304-B',
+            leaveType: LeaveType.HOME,
+            reason: 'Weekend trip to home.',
+            departureDate: new Date(Date.now() + 86400000).toISOString(),
+            returnDate: new Date(Date.now() + 3 * 86400000).toISOString(),
+            status: GatePassStatus.APPROVED,
+            requestedAt: new Date(Date.now() - 172800000).toISOString(),
+        },
+        {
+            id: 'gp2',
+            studentId: 'u1',
+            studentName: 'Alex Johnson',
+            roomNumber: '304-B',
+            leaveType: LeaveType.OUTING,
+            reason: 'Going out for a movie.',
+            departureDate: new Date(Date.now() - 3600000).toISOString(),
+            returnDate: new Date(Date.now() + 4 * 3600000).toISOString(),
+            status: GatePassStatus.PENDING,
+            requestedAt: new Date(Date.now() - 7200000).toISOString(),
+        },
+         {
+            id: 'gp3',
+            studentId: 'u1',
+            studentName: 'Alex Johnson',
+            roomNumber: '304-B',
+            leaveType: LeaveType.EMERGENCY,
+            reason: 'Urgent family matter.',
+            departureDate: new Date(Date.now() - 2 * 86400000).toISOString(),
+            returnDate: new Date(Date.now() - 86400000).toISOString(),
+            status: GatePassStatus.REJECTED,
+            requestedAt: new Date(Date.now() - 3 * 86400000).toISOString(),
+        }
+    ];

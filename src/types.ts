@@ -82,3 +82,29 @@ export interface User {
   roomNumber: string;
   photoURL?: string;
 }
+
+// Digital Gate Pass Module
+export enum GatePassStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+}
+  
+export enum LeaveType {
+  HOME = 'HOME',
+  OUTING = 'OUTING',
+  EMERGENCY = 'EMERGENCY',
+}
+
+export interface GatePass {
+  id: string;
+  studentId: string;
+  studentName: string;
+  roomNumber: string;
+  leaveType: LeaveType;
+  reason: string;
+  departureDate: string;
+  returnDate: string;
+  status: GatePassStatus;
+  requestedAt: string;
+}

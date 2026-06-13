@@ -11,9 +11,11 @@ import { AdminPanel } from './pages/AdminPanel';
 import { Announcements } from './pages/Announcements';
 import { LostFound } from './pages/LostFound';
 import { UserProfile } from './pages/UserProfile';
-import { User, UserRole, Issue, Announcement, LostItem } from './types';
+import { AntiRagging } from './pages/AntiRagging';
+import { GatePass } from './pages/GatePass';
+import { User, UserRole, Issue, Announcement, LostItem, GatePass as IGatePass, GatePassStatus } from './types';
 import { AnimatePresence } from 'framer-motion';
-import { INITIAL_ISSUES, INITIAL_ANNOUNCEMENTS, INITIAL_LOST_ITEMS } from './services/mockStore';
+import { INITIAL_ISSUES, INITIAL_ANNOUNCEMENTS, INITIAL_LOST_ITEMS, INITIAL_GATE_PASSES } from './services/mockStore';
 import { Unauthorized } from './pages/Unauthorized';
 
 const ProtectedLayout: React.FC<{ user: User; onLogout: () => void }> = ({ user, onLogout }) => {
@@ -39,11 +41,32 @@ const AppContent: React.FC = () => {
   const [issues, setIssues] = useState<Issue[]>(INITIAL_ISSUES);
   const [announcements, setAnnouncements] = useState<Announcement[]>(INITIAL_ANNOUNCEMENTS);
   const [lostItems, setLostItems] = useState<LostItem[]>(INITIAL_LOST_ITEMS);
+  const [gatePasses, setGatePasses] = useState<IGatePass[]>(INITIAL_GATE_PASSES);
 
   const addIssue = async (newIssue: Issue) => {
     await new Promise(resolve => setTimeout(resolve, 500));
     setIssues([newIssue, ...issues]);
   };
+
+  const addGatePass = async (passDetails: Omit<IGatePass, 'id' | 'status' | 'requestedAt' | 'studentName' | 'roomNumber'>) => {
+    if (!user) return;
+    const newPass: IGatePass = {
+      id: `gp${Date.now()}`,
+      status: GatePassStatus.PENDING,
+      requestedAt: new Date().toISOString(),
+      studentName: user.name,
+      roomNumber: user.roomNumber,
+      ...passDetails,
+    };
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setGatePasses([newPass, ...gatePasses]);
+  };
+
+  const updateGatePassStatus = async (passId: string, status: GatePassStatus) => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    setGatePasses(passes => passes.map(p => p.id === passId ? { ...p, status } : p));
+  };
+
 
   const updateIssue = async (updatedIssue: Issue) => {
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -76,7 +99,7 @@ const AppContent: React.FC = () => {
         {user && (
           <Route element={<ProtectedLayout user={user} onLogout={handleLogout} />}>
             {user.role === UserRole.ADMIN && (
-              <Route path="/admin" element={<AdminPanel issues={issues} onMerge={mergeIssues} />} />
+              <Route path="/admin" element={<AdminPanel issues={issues} onMerge={mergeIssues} gatePasses={gatePasses} onUpdatePassStatus={updateGatePassStatus} />} />
             )}
             <Route path="/dashboard" element={<Dashboard user={user} issues={issues} announcements={announcements} />} />
             <Route path="/profile" element={<UserProfile user={user} issues={issues} />} />
@@ -84,6 +107,8 @@ const AppContent: React.FC = () => {
             <Route path="/report" element={<ReportIssue user={user} onReport={addIssue} />} />
             <Route path="/announcements" element={<Announcements user={user} data={announcements} />} />
             <Route path="/lost-found" element={<LostFound items={lostItems} />} />
+            <Route path="/ragging" element={<AntiRagging user={user} onReport={addIssue} />} />
+            <Route path="/outpass" element={<GatePass user={user} passes={gatePasses.filter(p => p.studentId === user.id)} onNewPass={addGatePass} />} />
           </Route>
         )}
 

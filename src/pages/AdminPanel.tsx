@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { Issue, IssueStatus, User, UserRole, IssueCategory, IssuePriority } from '../types';
-import { Merge, CheckSquare, Square, Users, BarChart3, ListFilter, CheckCircle, Clock, AlertTriangle, UserCircle } from 'lucide-react';
+import { Issue, IssueStatus, User, UserRole, GatePass, GatePassStatus, IssueCategory, IssuePriority } from '../types';
+import { Merge, CheckSquare, Square, Users, BarChart3, ListFilter, CheckCircle, Clock, AlertTriangle, UserCircle, Ticket } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AdminPanelProps {
   issues: Issue[];
   onMerge: (parentId: string, children: string[]) => void;
+  gatePasses: GatePass[];
+  onUpdatePassStatus: (passId: string, status: GatePassStatus) => void;
 }
 
 const mockUsers: User[] = [
@@ -15,9 +17,9 @@ const mockUsers: User[] = [
   { id: '4', name: 'Mary Johnson', email: 'mary.j@example.com', role: UserRole.STUDENT, roomNumber: '104D' },
 ];
 
-type AdminTab = 'ISSUES' | 'USERS' | 'ANALYTICS';
+type AdminTab = 'ISSUES' | 'PASSES' | 'USERS' | 'ANALYTICS';
 
-export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge }) => {
+export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge, gatePasses, onUpdatePassStatus }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<AdminTab>('ISSUES');
 
@@ -33,6 +35,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge }) => {
   }, [issues]);
 
   const activeIssues = issues.filter(i => i.status !== IssueStatus.CLOSED && !i.mergedInto);
+  const pendingPasses = gatePasses.filter(p => p.status === GatePassStatus.PENDING);
 
   const toggleSelect = (id: string) => {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -164,6 +167,50 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge }) => {
             </table>
           </div>
         );
+      case 'PASSES':
+        return (
+          <div className="bg-white rounded-xl shadow-sm border border-slate-200/80 overflow-hidden">
+             <div className="p-4 border-b border-slate-200/80">
+                <h3 className="text-lg font-bold text-slate-800">Pending Gate Pass Requests ({pendingPasses.length})</h3>
+             </div>
+             <table className="w-full text-left text-sm">
+              <thead className="bg-slate-50/80">
+                <tr>
+                  <th className="p-4 font-semibold text-slate-600">Student</th>
+                  <th className="p-4 font-semibold text-slate-600">Dates</th>
+                  <th className="p-4 font-semibold text-slate-600">Reason</th>
+                  <th className="p-4 font-semibold text-slate-600">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {pendingPasses.map(pass => (
+                  <tr key={pass.id} className="hover:bg-slate-50">
+                    <td className="p-4">
+                        <div className="font-bold text-slate-900">{pass.studentName}</div>
+                        <div className="text-slate-500">Room: {pass.roomNumber}</div>
+                    </td>
+                    <td className="p-4">
+                        <div className="text-slate-800"><b>From:</b> {new Date(pass.departureDate).toLocaleDateString()}</div>
+                        <div className="text-slate-800"><b>To:</b> {new Date(pass.returnDate).toLocaleDateString()}</div>
+                    </td>
+                    <td className="p-4 text-slate-600 max-w-sm truncate">{pass.reason}</td>
+                    <td className="p-4">
+                        <div className="flex space-x-2">
+                            <button onClick={() => onUpdatePassStatus(pass.id, GatePassStatus.APPROVED)} className="px-3 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-md hover:bg-green-200">Approve</button>
+                            <button onClick={() => onUpdatePassStatus(pass.id, GatePassStatus.REJECTED)} className="px-3 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-md hover:bg-red-200">Reject</button>
+                        </div>
+                    </td>
+                  </tr>
+                ))}
+                {pendingPasses.length === 0 && (
+                    <tr>
+                        <td colSpan={4} className="text-center p-10 text-slate-500">No pending gate pass requests.</td>
+                    </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )
       case 'USERS':
         return (
           <div className="bg-white rounded-xl shadow-sm border p-4">
@@ -220,6 +267,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge }) => {
 
       <div className="flex space-x-2 border-b border-slate-200 pb-2">
         <TabButton tab="ISSUES" label="Issues" icon={ListFilter} />
+        <TabButton tab="PASSES" label="Pass Requests" icon={Ticket} />
         <TabButton tab="USERS" label="Users" icon={Users} />
         <TabButton tab="ANALYTICS" label="Analytics" icon={BarChart3} />
       </div>
