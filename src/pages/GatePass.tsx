@@ -152,6 +152,17 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
   const [isForging, setIsForging] = useState(false);
   const [forgeText, setForgeText] = useState('');
 
+  const formatDateTimeLocal = (date: Date) => {
+    const tzOffset = date.getTimezoneOffset() * 60000;
+    return (new Date(date.getTime() - tzOffset)).toISOString().slice(0, 16);
+  };
+
+  const applyPreset = (hours: number) => {
+    const now = new Date();
+    setDepartureDate(formatDateTimeLocal(now));
+    setReturnDate(formatDateTimeLocal(new Date(now.getTime() + hours * 60 * 60 * 1000)));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsForging(true);
@@ -229,13 +240,13 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
             {activeTab === 'REQUEST' && (
               <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
                 <div className="text-center mb-2">
-                  <h2 className="text-xs font-black text-white font-mc-title uppercase">Inscribe Portal Passage Rune</h2>
-                  <p className="text-[9px] text-slate-500 font-mono-readable mt-1">Select your route, log your quest objectives, and submit for warden approval</p>
+                  <h2 className="text-sm font-black text-white font-mc-title uppercase">Inscribe Portal Passage Rune</h2>
+                  <p className="text-xs text-slate-500 font-mono-readable mt-1">Select your route, log your quest objectives, and submit for warden approval</p>
                 </div>
 
                 {/* Leave Type Selection */}
                 <div className="space-y-2">
-                  <label className="text-[8px] font-bold text-slate-500 uppercase font-mc-sub tracking-wider block">Destination Route</label>
+                  <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Destination Route</label>
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {Object.entries(LEAVE_LABELS).map(([key, info]) => (
                       <button
@@ -253,46 +264,72 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
                         }}
                       >
                         <span className="text-lg block mb-1">{info.icon}</span>
-                        <p className="text-[9px] font-mc-sub uppercase font-bold" style={{ color: info.color }}>{info.name}</p>
-                        <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5 leading-relaxed">{info.desc}</p>
+                        <p className="text-[11px] font-mc-sub uppercase font-bold" style={{ color: info.color }}>{info.name}</p>
+                        <p className="text-[10px] text-slate-500 font-mono-readable mt-0.5 leading-relaxed">{info.desc}</p>
                       </button>
                     ))}
                   </div>
                 </div>
 
-                {/* Date Fields */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-[8px] font-bold text-slate-500 uppercase font-mc-sub tracking-wider block mb-2">Portal Outbound Time</label>
-                    <input
-                      type="datetime-local"
-                      required
-                      value={departureDate}
-                      onChange={(e) => setDepartureDate(e.target.value)}
-                      className="w-full text-xs font-mono-readable"
-                    />
+                {/* Date Fields & Presets */}
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Portal Outbound Time</label>
+                      <input
+                        type="datetime-local"
+                        required
+                        value={departureDate}
+                        onChange={(e) => setDepartureDate(e.target.value)}
+                        className="w-full text-sm font-bold font-mono-readable py-3 px-4 bg-[#141419] border-2 border-[#3c3c44] rounded text-white focus:border-mc-cyan outline-none transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Portal Return Time</label>
+                      <input
+                        type="datetime-local"
+                        required
+                        value={returnDate}
+                        onChange={(e) => setReturnDate(e.target.value)}
+                        className="w-full text-sm font-bold font-mono-readable py-3 px-4 bg-[#141419] border-2 border-[#3c3c44] rounded text-white focus:border-mc-cyan outline-none transition-all"
+                      />
+                    </div>
                   </div>
-                  <div>
-                    <label className="text-[8px] font-bold text-slate-500 uppercase font-mc-sub tracking-wider block mb-2">Portal Return Time</label>
-                    <input
-                      type="datetime-local"
-                      required
-                      value={returnDate}
-                      onChange={(e) => setReturnDate(e.target.value)}
-                      className="w-full text-xs font-mono-readable"
-                    />
+
+                  {/* Quick Preset Buttons */}
+                  <div className="p-4 bg-[#141419]/50 border border-[#26262a] rounded">
+                    <span className="text-[10px] font-bold text-slate-500 uppercase font-mc-sub tracking-wider block mb-2">
+                      ⏳ Quick Outpass Duration Presets
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        { label: '⚡ 4 Hours (Short Outing)', hours: 4 },
+                        { label: '🌙 12 Hours (Rest Shift)', hours: 12 },
+                        { label: '🏠 24 Hours (Overnight)', hours: 24 },
+                        { label: '🏰 3 Days (Weekend Leave)', hours: 72 },
+                      ].map(preset => (
+                        <button
+                          key={preset.label}
+                          type="button"
+                          onClick={() => applyPreset(preset.hours)}
+                          className="px-3 py-2 bg-[#141419] border border-[#3c3c44] hover:border-mc-cyan rounded text-[9px] font-mc-sub uppercase text-slate-300 hover:text-white transition-all cursor-pointer shadow-inner active:scale-95"
+                        >
+                          {preset.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
                 {/* Reason */}
                 <div>
-                  <label className="text-[8px] font-bold text-slate-500 uppercase font-mc-sub tracking-wider block mb-2">Quest Objectives Scroll</label>
+                  <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Quest Objectives Scroll</label>
                   <textarea
                     rows={3}
                     required
                     value={reason}
                     onChange={(e) => setReason(e.target.value)}
-                    className="w-full text-xs font-mono-readable resize-none"
+                    className="w-full text-sm font-mono-readable py-3 px-4 bg-[#141419] border-2 border-[#3c3c44] rounded text-white focus:border-mc-cyan outline-none transition-all resize-none"
                     placeholder="Describe your travel quest objectives..."
                   />
                 </div>
@@ -301,8 +338,8 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
                 <div className="bg-[#141419] border border-[#3c3c44] rounded p-3 flex items-center gap-3">
                   <span className="text-xl">{selectedLeave.icon}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[9px] font-mc-sub uppercase font-bold" style={{ color: selectedLeave.color }}>{selectedLeave.name}</p>
-                    <p className="text-[8px] text-slate-500 font-mono-readable">{selectedLeave.desc}</p>
+                    <p className="text-[11px] font-mc-sub uppercase font-bold" style={{ color: selectedLeave.color }}>{selectedLeave.name}</p>
+                    <p className="text-[10px] text-slate-500 font-mono-readable">{selectedLeave.desc}</p>
                   </div>
                   <Zap size={14} style={{ color: selectedLeave.color }} className="shrink-0" />
                 </div>
