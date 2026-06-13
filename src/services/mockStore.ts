@@ -90,39 +90,28 @@ export const INITIAL_ISSUES: Issue[] = [
 ];
 
 export const INITIAL_LOST_ITEMS: LostItem[] = [
-  {
-    id: 'l1',
-    name: 'Lost Wallet',
-    description: 'Brown leather wallet, found near the main gate.',
-    location: 'Main Gate',
-    type: 'FOUND',
-    status: 'OPEN',
-    contact: 'Reception',
-    date: '2023-10-28',
-    image: 'https://images.unsplash.com/photo-1627123424574-181ce5171c98?auto=format&fit=crop&q=80&w=500',
-  },
-  {
-    id: 'l2',
-    name: 'Found Keys',
-    description: 'Bunch of keys with a blue keychain.',
-    location: 'Canteen',
-    type: 'FOUND',
-    status: 'OPEN',
+  { 
+    id: 'l2', 
+    name: 'Found Keys', 
+    description: 'Bunch of keys found near the library entrance. Has a blue keychain.', 
+    location: 'Canteen', 
+    type: 'FOUND', 
+    status: 'OPEN', 
     contact: 'Reception',
     date: '2023-10-27',
-    image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&q=80&w=500',
+    image: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&q=80&w=500'
   },
-  {
-    id: 'l3',
-    name: 'Lost Watch',
-    description: 'A silver-strapped analog watch.',
-    location: 'Library',
-    type: 'LOST',
-    status: 'OPEN',
+  { 
+    id: 'l3', 
+    name: 'Lost Watch', 
+    description: 'A silver-strapped analog watch. Last seen in the mess hall.', 
+    location: 'Library', 
+    type: 'LOST', 
+    status: 'OPEN', 
     contact: 'Vihaan M. (Room 101)',
     date: '2023-10-26',
-    image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=500',
-  },
+    image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=500'
+  }
 ];
 export const INITIAL_GATE_PASSES: GatePass[] = [
     {
