@@ -1,0 +1,5 @@
+{
+  "name": "HostelBuddy",
+  "description": "A smart hostel issue tracking system with AI-powered triage, role-based access, and duplicate management.",
+  "requestFramePermissions": []
+}
