@@ -40,12 +40,19 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
       <nav className="flex-1 px-4 space-y-2 overflow-y-auto no-scrollbar">
         <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Menu</p>
         <NavItem to="/dashboard" icon={<Home size={20} />} label="Dashboard" />
-        <NavItem to="/outpass" icon={<Ticket size={20} />} label={<span>Gate Pass <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">NEW</span></span>} />
-        <NavItem to="/report" icon={<PlusCircle size={20} />} label="Report Issue" />
         <NavItem to="/issues" icon={<List size={20} />} label="All Issues" />
-        <NavItem to="/mess-menu" icon={<Utensils size={20} />} label="Mess Menu" />
         <NavItem to="/announcements" icon={<Bell size={20} />} label="Announcements" />
-        <NavItem to="/lost-found" icon={<Search size={20} />} label="Lost & Found" />
+
+        {user.role === UserRole.STUDENT && (
+          <>
+            <NavItem to="/outpass" icon={<Ticket size={20} />} label={<span>Gate Pass <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">NEW</span></span>} />
+            <NavItem to="/report" icon={<PlusCircle size={20} />} label="Report Issue" />
+            <NavItem to="/mess-menu" icon={<Utensils size={20} />} label="Mess Menu" />
+            <NavItem to="/lost-found" icon={<Search size={20} />} label="Lost & Found" />
+            {/* My Profile link is student specific too */}
+            <NavItem to="/profile" icon={<UserIcon size={20} />} label="My Profile" />
+          </>
+        )}
         
         {user.role === UserRole.ADMIN && (
           <div className="pt-4 mt-2">
@@ -57,16 +64,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
 
       <div className="px-4 py-2">
           <div className="my-2 border-t border-gray-200/80"></div>
-          <NavLink to="/ragging" className={({ isActive }) =>
-    `group relative flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
-      isActive
-        ? 'bg-rose-100 text-rose-700 font-semibold'
-        : 'text-rose-600 hover:bg-rose-50/60 hover:text-rose-700'
-    }`
-  }>
-            <ShieldAlert size={20} />
-            <span>Anti-Ragging Cell</span>
-          </NavLink>
+          {user.role === UserRole.STUDENT && (
+            <NavLink to="/ragging" className={({ isActive }) =>
+              `group relative flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
+                isActive
+                  ? 'bg-rose-100 text-rose-700 font-semibold'
+                  : 'text-rose-600 hover:bg-rose-50/60 hover:text-rose-700'
+              }`
+            }>
+              <ShieldAlert size={20} className="text-rose-500" />
+              <span className="text-rose-600 font-medium">Anti-Ragging Cell</span>
+            </NavLink>
+          )}
       </div>
 
       <div className="p-4 space-y-2 border-t border-gray-200/80">
