@@ -4,9 +4,10 @@
 
 <div align="center">
   <a href="https://youtu.be/zZI7R--nfac" target="_blank">
-    <img src="https://github.com/user-attachments/assets/46388e1c-aaa6-4e09-b64a-3f728a5bb9a3" width="100%" alt="HostelBuddy Demo Video" style="border-radius: 10px; box-shadow: 0px 4px 12px rgba(0,0,0,0.1);" />
+    <img src="https://github.com/user-attachments/assets/46388e1c-aaa6-4e09-b64a-3f728a5bb9a3" style="width: 100%; max-width: 800px; border-radius: 10px; box-shadow: 0px 4px 12px rgba(0,0,0,0.5);" alt="HostelBuddy Demo Video" />
   </a>
   
+  <br />
   <br />
   
   <a href="https://youtu.be/zZI7R--nfac" target="_blank">
