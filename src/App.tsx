@@ -51,7 +51,10 @@ const ProtectedLayout: React.FC<ProtectedLayoutProps> = ({ user, onLogout, userX
 };
 
 const AppContent: React.FC = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const saved = localStorage.getItem('hostelbuddy_user');
+    return saved ? JSON.parse(saved) : null;
+  });
   const navigate = useNavigate();
 
   const [issues, setIssues] = useState<Issue[]>(INITIAL_ISSUES);
@@ -59,10 +62,19 @@ const AppContent: React.FC = () => {
   const [lostItems, setLostItems] = useState<LostItem[]>(INITIAL_LOST_ITEMS);
   const [gatePasses, setGatePasses] = useState<IGatePass[]>(INITIAL_GATE_PASSES);
 
-  // RPG States
-  const [userXp, setUserXp] = useState<number>(340);
-  const [userLevel, setUserLevel] = useState<number>(3);
-  const [userCoins, setUserCoins] = useState<number>(85);
+  // RPG States with session persistence
+  const [userXp, setUserXp] = useState<number>(() => {
+    const saved = localStorage.getItem('hostelbuddy_xp');
+    return saved ? parseInt(saved, 10) : 340;
+  });
+  const [userLevel, setUserLevel] = useState<number>(() => {
+    const saved = localStorage.getItem('hostelbuddy_level');
+    return saved ? parseInt(saved, 10) : 3;
+  });
+  const [userCoins, setUserCoins] = useState<number>(() => {
+    const saved = localStorage.getItem('hostelbuddy_coins');
+    return saved ? parseInt(saved, 10) : 85;
+  });
   const [levelUpNotif, setLevelUpNotif] = useState<number | null>(null);
 
   const gainXp = (amount: number) => {
@@ -74,18 +86,29 @@ const AppContent: React.FC = () => {
         setUserLevel(l => {
           const nextLvl = l + 1;
           setLevelUpNotif(nextLvl);
-          setUserCoins(c => c + 20);
+          setUserCoins(c => {
+            const nextCoins = c + 20;
+            localStorage.setItem('hostelbuddy_coins', String(nextCoins));
+            return nextCoins;
+          });
           setTimeout(() => setLevelUpNotif(null), 3000);
+          localStorage.setItem('hostelbuddy_level', String(nextLvl));
           return nextLvl;
         });
+        localStorage.setItem('hostelbuddy_xp', String(excess));
         return excess;
       }
+      localStorage.setItem('hostelbuddy_xp', String(totalXp));
       return totalXp;
     });
   };
 
   const gainCoins = (amount: number) => {
-    setUserCoins(prev => prev + amount);
+    setUserCoins(prev => {
+      const nextCoins = prev + amount;
+      localStorage.setItem('hostelbuddy_coins', String(nextCoins));
+      return nextCoins;
+    });
   };
 
   const addIssue = async (newIssue: Issue) => {
@@ -148,9 +171,16 @@ const AppContent: React.FC = () => {
     }));
   };
 
-  const handleLogin = (loggedInUser: User) => setUser(loggedInUser);
+  const handleLogin = (loggedInUser: User) => {
+    setUser(loggedInUser);
+    localStorage.setItem('hostelbuddy_user', JSON.stringify(loggedInUser));
+  };
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem('hostelbuddy_user');
+    localStorage.removeItem('hostelbuddy_xp');
+    localStorage.removeItem('hostelbuddy_level');
+    localStorage.removeItem('hostelbuddy_coins');
     navigate('/');
   };
 

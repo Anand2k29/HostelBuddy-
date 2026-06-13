@@ -561,45 +561,63 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
             [ Check daily recipes, rate food flavor items, and vote on upcoming sunday feasts ]
           </p>
         </div>
-        
-        {/* Chef Score Card */}
-        <div className="mc-card bg-[#1f1f26]/90 p-4 flex items-center gap-3.5 shrink-0">
-          <Award size={20} className="text-mc-gold shrink-0 animate-pulse" />
-          <div>
-            <h4 className="text-[10px] font-black text-white font-mc-sub uppercase">Chef Score</h4>
-            <p className="text-[10px] text-mc-gold font-mc-sub font-bold mt-0.5">⭐ 4.6 / 5.0 (230 votes)</p>
-          </div>
-        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Special Chef Recommendation Card */}
-        <div className="lg:col-span-2 mc-card bg-[#1f1f26] border border-[#f2ab13] p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="space-y-1">
-            <h3 className="text-xs font-black text-white font-mc-title uppercase tracking-wide flex items-center gap-1.5">
-              <span>🍳</span> Chef Recommendation
-            </h3>
-            <p className="text-xs text-slate-300 font-mono-readable">
-              Try today's dinner recipe — <span className="text-mc-gold font-bold underline">Jeera Rice with Kadhi Pakora</span>, seasoned with home-ground portal spices!
-            </p>
+      {/* ═══ Gamified Mess KPI Stats Grid ═══ */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* KPI 1: Chef Reputation */}
+        <div className="mc-card bg-[#1f1f26]/90 p-4 border border-[#3c3c44] flex items-center gap-3.5 hover:border-mc-gold/40 transition-all hover:shadow-[0_0_15px_rgba(255,190,0,0.15)] group">
+          <div className="w-12 h-12 rounded bg-[#ffbe00]/10 border border-[#ffbe00]/30 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+            🍳
           </div>
-          <div className="btn-mc bg-[#f2ab13] text-[#141419] border-[#f2ab13] font-bold text-[11px] uppercase tracking-wider py-1 px-3">
-            Tavern Pick ⭐
+          <div>
+            <h4 className="text-[10px] font-bold text-slate-400 font-mc-sub uppercase tracking-wider">Chef Reputation</h4>
+            <p className="text-sm font-black text-mc-gold font-mc-title mt-1.5 uppercase leading-none">⭐ 4.6 / 5.0</p>
+            <p className="text-[9px] text-slate-500 font-mono-readable mt-1.5">230 Guild Votes registered</p>
           </div>
         </div>
 
-        {/* Chef Golem Command Log */}
-        <div className="mc-card bg-[#1f1f26] border border-[#3c3c44] p-4 font-mono-readable flex flex-col justify-center">
-          <h4 className="text-xs font-black text-mc-cyan font-mc-title uppercase mb-2 flex items-center gap-1.5">
-            <span>🤖</span> Chef Golem Command Log
-          </h4>
-          <div className="text-[10.5px] text-slate-400 space-y-1">
-            {GOLEM_NOTICES.map((notice, idx) => (
-              <div key={idx} className="flex gap-1.5 leading-relaxed">
-                <span className="text-[#00e676] shrink-0">►</span>
-                <p>{notice}</p>
-              </div>
-            ))}
+        {/* KPI 2: Active Serve */}
+        <div className="mc-card bg-[#1f1f26]/90 p-4 border border-[#3c3c44] flex items-center gap-3.5 hover:border-[#00e676]/40 transition-all hover:shadow-[0_0_15px_rgba(0,230,118,0.15)] group">
+          <div className="w-12 h-12 rounded bg-[#00e676]/10 border border-[#00e676]/30 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+            🍲
+          </div>
+          <div>
+            <h4 className="text-[10px] font-bold text-slate-400 font-mc-sub uppercase tracking-wider">Active Serve</h4>
+            <p className={`text-sm font-black font-mc-title mt-1.5 uppercase leading-none ${activeMealKey ? 'text-[#00e676]' : 'text-slate-400'}`}>
+              {activeMealKey ? `${activeMealKey} ON` : 'Heaters Warm'}
+            </p>
+            <p className="text-[9px] text-slate-500 font-mono-readable mt-1.5">
+              {activeMealKey ? 'Kitchen portal is serving now' : 'Resting between cycles'}
+            </p>
+          </div>
+        </div>
+
+        {/* KPI 3: Pantry Rations */}
+        <div className="mc-card bg-[#1f1f26]/90 p-4 border border-[#3c3c44] flex items-center gap-3.5 hover:border-mc-cyan/40 transition-all hover:shadow-[0_0_15px_rgba(0,216,223,0.15)] group">
+          <div className="w-12 h-12 rounded bg-mc-cyan/10 border border-mc-cyan/30 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+            🎒
+          </div>
+          <div>
+            <h4 className="text-[10px] font-bold text-slate-400 font-mc-sub uppercase tracking-wider">Pantry Rations</h4>
+            <p className="text-sm font-black text-mc-cyan font-mc-title mt-1.5 uppercase leading-none">
+              {Object.values(pantry).reduce((a, b) => a + b, 0)} Items
+            </p>
+            <p className="text-[9px] text-slate-500 font-mono-readable mt-1.5">Ready for cauldron brewing</p>
+          </div>
+        </div>
+
+        {/* KPI 4: Total Reviews */}
+        <div className="mc-card bg-[#1f1f26]/90 p-4 border border-[#3c3c44] flex items-center gap-3.5 hover:border-purple-500/40 transition-all hover:shadow-[0_0_15px_rgba(168,85,247,0.15)] group">
+          <div className="w-12 h-12 rounded bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-xl shrink-0 group-hover:scale-105 transition-transform">
+            📜
+          </div>
+          <div>
+            <h4 className="text-[10px] font-bold text-slate-400 font-mc-sub uppercase tracking-wider">Tavern Reviews</h4>
+            <p className="text-sm font-black text-purple-400 font-mc-title mt-1.5 uppercase leading-none">
+              {reviews.length} Logs
+            </p>
+            <p className="text-[9px] text-slate-500 font-mono-readable mt-1.5">Recent critique uploads</p>
           </div>
         </div>
       </div>
