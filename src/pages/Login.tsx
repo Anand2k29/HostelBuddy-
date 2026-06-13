@@ -19,7 +19,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const selectedRoleFromLanding = (location.state as { role?: UserRole })?.role || UserRole.STUDENT;
 
   const handleAuthSuccess = (user: User) => {
-    // Force overwrite the role with the one selected on the Landing page
     const userWithSelectedRole: User = { ...user, role: selectedRoleFromLanding };
     onLogin(userWithSelectedRole);
     if (userWithSelectedRole.role === UserRole.ADMIN) {
@@ -32,9 +31,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      let user = await mockSignInWithGoogle(); // Get base mock user
-
-      // Override user details based on selected role
+      let user = await mockSignInWithGoogle();
       if (selectedRoleFromLanding === UserRole.ADMIN) {
         user = {
           ...user,
@@ -42,7 +39,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           email: "warden@college.edu",
           photoURL: "https://api.dicebear.com/8.x/initials/svg?seed=Felix"
         };
-      } else { // Default to Student
+      } else {
         user = {
           ...user,
           name: "Aarav Sharma",
@@ -50,7 +47,6 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           photoURL: "https://api.dicebear.com/8.x/initials/svg?seed=Aarav"
         };
       }
-
       handleAuthSuccess(user);
     } catch (error) {
       console.error(error);
@@ -76,7 +72,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: 0.1, delayChildren: 0.2 },
+      transition: { staggerChildren: 0.1, delayChildren: 0.15 },
     },
   };
 
@@ -86,124 +82,136 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   };
 
   return (
-    <div className="min-h-screen w-full flex bg-gray-50">
+    <div className="min-h-screen w-full flex bg-[#141419] text-[#f1f5f9]">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-gray-900 items-center justify-center p-12">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-indigo-600/20 to-transparent"></div>
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.05)_0%,_transparent_30%)]"></div>
+      <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-[#1a1a20] items-center justify-center p-12 border-r-3 border-[#101014]">
+        <div className="absolute inset-0 scanline opacity-5 pointer-events-none"></div>
         
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1 }}
-          className="relative z-10 text-white max-w-lg"
+          transition={{ duration: 0.5 }}
+          className="relative z-10 text-white max-w-lg space-y-6"
         >
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, type: 'spring' }}
+            className="space-y-4"
           >
-            <div className="w-16 h-16 bg-white/10 backdrop-blur-lg rounded-2xl flex items-center justify-center mb-8 border border-white/20 shadow-lg">
-                <span className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-gray-400">HB</span>
+            <div className="w-12 h-12 bg-[#2b2b35] border-2 border-[#101014] rounded flex items-center justify-center font-mc-title text-base text-mc-cyan shadow-inner">
+                H
             </div>
-            <h1 className="text-5xl font-extrabold mb-6 leading-tight tracking-tighter">
-              Welcome to the Future of Hostel Living.
-            </h1>
-            <p className="text-gray-300 text-lg leading-relaxed">
-              HostelBuddy streamlines everything from reporting issues to staying connected with your community.
+            
+            <div className="relative inline-block">
+              <h1 
+                className="text-4xl font-black text-white font-mc-title uppercase select-none tracking-tight leading-none"
+                style={{ textShadow: '2px 2px 0px #111011' }}
+              >
+                HostelBuddy
+              </h1>
+              <div className="absolute -bottom-2.5 -right-6 text-[#ffd500] font-mc-title text-[9px] uppercase mc-splash origin-center select-none drop-shadow-[0_1.5px_0_rgba(0,0,0,0.8)]">
+                Lobby Signin
+              </div>
+            </div>
+
+            <p className="text-slate-400 text-sm leading-relaxed font-mono-readable pt-2">
+              Log reports, request digital gate outpasses, review daily dining plans, and coordinate roommate sync matching under a unified console.
             </p>
           </motion.div>
         </motion.div>
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-[#141419]">
         <motion.div
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="w-full max-w-sm"
+          className="w-full max-w-sm mc-card bg-[#1f1f26] p-8 shadow-2xl relative"
         >
-          <motion.div variants={itemVariants} className="mb-8 text-center">
-            <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight">Sign In</h2>
-            <p className="text-gray-500 mt-2">Enter your credentials to access your account.</p>
+          <div className="absolute inset-0 scanline opacity-5 pointer-events-none"></div>
+          
+          <motion.div variants={itemVariants} className="mb-6 text-center">
+            <h2 className="text-lg font-black text-white font-mc-title uppercase tracking-wide">Enter Lobby</h2>
+            <p className="text-[10px] text-slate-500 font-mono-readable uppercase tracking-widest mt-1.5">Enter credentials to load server credentials</p>
           </motion.div>
 
+          {/* Google Login button */}
           <motion.button
             variants={itemVariants}
             onClick={handleGoogleLogin}
             disabled={isLoading}
-            className="group relative w-full flex items-center justify-center space-x-3 bg-white border border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-800 font-semibold py-3 px-4 rounded-xl transition-all duration-200 mb-6 shadow-sm"
-            whileTap={{ scale: 0.98 }}
+            className="btn-mc w-full flex items-center justify-center space-x-3 mb-6 uppercase text-[10px]"
           >
             {isLoading ? (
-              <Loader2 className="animate-spin text-gray-400" size={20} />
+              <Loader2 className="animate-spin" size={14} />
             ) : (
               <>
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-5 h-5" />
-                <span>Sign in with Google</span>
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-4 h-4 shrink-0" />
+                <span>Google credentials</span>
               </>
             )}
           </motion.button>
 
           <motion.div variants={itemVariants} className="relative mb-6">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
+              <div className="w-full border-t border-[#26262a]"></div>
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-gray-50 text-gray-500 font-medium">OR</span>
+            <div className="relative flex justify-center text-[9px] font-mc-sub uppercase">
+              <span className="px-4 bg-[#1f1f26] text-slate-500">OR</span>
             </div>
           </motion.div>
 
-          <form onSubmit={handleEmailLogin} className="space-y-4">
+          <form onSubmit={handleEmailLogin} className="space-y-4 font-mono-readable">
             <motion.div variants={itemVariants}>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Email address</label>
+              <label className="block text-[10px] font-mc-sub uppercase tracking-wider text-slate-400 mb-1.5">Email Slot</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all outline-none text-gray-900 placeholder:text-gray-400 shadow-sm"
-                placeholder="you@example.com"
+                className="w-full px-3.5 py-2.5 bg-[#141419] border border-[#26262a] text-[#f1f5f9] rounded focus:outline-none focus:border-mc-cyan/50 text-xs transition-all placeholder:text-slate-600 outline-none"
+                placeholder="you@college.edu"
               />
             </motion.div>
+            
             <motion.div variants={itemVariants} className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
+              <label className="block text-[10px] font-mc-sub uppercase tracking-wider text-slate-400 mb-1.5">Password Key</label>
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-white border border-gray-300 focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all outline-none text-gray-900 placeholder:text-gray-400 shadow-sm"
+                className="w-full px-3.5 py-2.5 bg-[#141419] border border-[#26262a] text-[#f1f5f9] rounded focus:outline-none focus:border-mc-cyan/50 text-xs transition-all placeholder:text-slate-600 outline-none pr-10"
                 placeholder="••••••••"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-10 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-9 text-slate-500 hover:text-slate-350 cursor-pointer"
               >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
             </motion.div>
-            <motion.div variants={itemVariants} className="flex items-center justify-between text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">Forgot password?</a>
+            
+            <motion.div variants={itemVariants} className="flex items-center justify-between text-[11px] pt-1">
+                <a href="#" className="font-semibold text-mc-cyan hover:underline uppercase tracking-wide text-[10px]">Forgot Key?</a>
             </motion.div>
 
-            <motion.div variants={itemVariants}>
+            <motion.div variants={itemVariants} className="pt-2">
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/20 flex items-center justify-center space-x-2 group"
-                whileTap={{ scale: 0.98 }}
+                className="btn-mc w-full flex items-center justify-center space-x-2 uppercase py-3 text-[10px]"
               >
-                <span>{isLoading ? 'Signing in...' : 'Sign in'}</span>
-                {!isLoading && <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />}
+                <span>{isLoading ? 'Loading...' : 'Sign In'}</span>
+                {!isLoading && <ArrowRight size={14} />}
               </button>
             </motion.div>
           </form>
 
-          <motion.p variants={itemVariants} className="mt-6 text-center text-sm text-gray-500">
-            Don't have an account? <a href="#" className="font-semibold text-blue-600 hover:text-blue-500">Sign up</a>
+          <motion.p variants={itemVariants} className="mt-6 text-center text-[10px] text-slate-500 uppercase tracking-widest">
+            First login? <a href="#" className="font-bold text-mc-cyan hover:underline">Deploy account</a>
           </motion.p>
         </motion.div>
       </div>

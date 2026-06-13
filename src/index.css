@@ -1,19 +1,159 @@
 @import "tailwindcss";
 
+@theme {
+  --color-mc-bg: #141419;
+  --color-mc-card: #1f1f26;
+  --color-mc-card-light: #2b2b35;
+  --color-mc-cyan: #00d8df;
+  --color-mc-green: #10b981;
+  --color-mc-red: #ef4444;
+  --color-mc-gold: #ffbe00;
+  --color-mc-emerald: #00e676;
+}
+
 :root {
-  --color-primary: #3b82f6; /* New vibrant blue */
-  --color-secondary: #64748b;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
+  --color-primary: #00d8df;
+  --color-secondary: #ffbe00;
+  --color-success: #00e676;
+  --color-warning: #eab308;
   --color-danger: #ef4444;
 }
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: #f7f9fc; /* Slightly cooler background */
-  color: #1e293b; /* Softer black for text */
+  background-color: #141419;
+  color: #e2e8f0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: 
+    linear-gradient(rgba(20, 20, 25, 0.96), rgba(20, 20, 25, 0.96)),
+    radial-gradient(circle at 50% 50%, rgba(0, 216, 223, 0.04) 0%, transparent 70%);
+}
+
+/* Global Content Contrast Overrides - Instantly solves low visibility in Dark Mode */
+main, .flex-1 {
+  background-color: #141419;
+}
+
+/* Override all hardcoded white bg card panels to Basalt/Inventory theme */
+main .bg-white, main .bg-slate-50, main .bg-gray-50, .bg-white {
+  background-color: #1f1f26 !important;
+  color: #f1f5f9 !important;
+  border: 2px solid #26262a !important;
+  box-shadow: inset 1px 1px 0px rgba(255, 255, 255, 0.05), 0 4px 10px rgba(0,0,0,0.3) !important;
+  border-radius: 6px !important;
+}
+
+/* Target elements nested in white panels that usually have gray borders */
+main .border-gray-200, main .border-slate-200, main .border-gray-100, main .border-slate-100 {
+  border-color: #26262a !important;
+}
+
+main .divide-gray-100 > *, main .divide-slate-100 > * {
+  border-color: #26262a !important;
+}
+
+/* Force headings to bright white for high contrast */
+main h1, main h2, main h3, main h4, main h5, main h6, 
+.text-gray-900, .text-slate-900, .text-slate-800, .text-gray-800,
+main .text-gray-900, main .text-slate-900, main .text-slate-800, main .text-gray-800 {
+  color: #ffffff !important;
+}
+
+/* Set readable gray for body texts */
+main p, main span, main label, main li,
+.text-gray-500, .text-slate-500, .text-gray-600, .text-slate-600,
+main .text-gray-500, main .text-slate-500, main .text-gray-600, main .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+/* Accent overrides */
+main .text-indigo-600, main .text-blue-600, main .text-indigo-700, main .text-blue-700 {
+  color: #00d8df !important;
+}
+main .text-rose-600, main .text-red-600, main .text-rose-700, main .text-red-700 {
+  color: #ef4444 !important;
+}
+main .text-emerald-600, main .text-green-600, main .text-green-700, main .text-emerald-700 {
+  color: #00e676 !important;
+}
+main .text-amber-600, main .text-yellow-600, main .text-amber-700, main .text-yellow-700 {
+  color: #ffbe00 !important;
+}
+
+/* Hover list item backgrounds */
+main .hover\:bg-gray-50:hover, main .hover\:bg-gray-100\/70:hover, main .hover\:bg-slate-50\/50:hover {
+  background-color: #2b2b35 !important;
+}
+
+/* Form inputs & text fields */
+main input, main textarea, main select {
+  background-color: #141419 !important;
+  color: #ffffff !important;
+  border: 2px solid #3c3c44 !important;
+  border-radius: 4px !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  outline: none !important;
+}
+
+main input:focus, main textarea:focus, main select:focus {
+  border-color: #00d8df !important;
+}
+
+/* Custom Minecraft GUI Card */
+.mc-card {
+  background-color: #1f1f26;
+  border: 3px solid #101014;
+  box-shadow: inset 2px 2px 0px rgba(255, 255, 255, 0.05), inset -2px -2px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+
+.mc-card:hover {
+  border-color: #00d8df;
+  box-shadow: inset 2px 2px 0px rgba(255, 255, 255, 0.08), inset -2px -2px 0px rgba(0, 216, 223, 0.2);
+}
+
+/* Slot inventory cells */
+.mc-slot {
+  background-color: #141419;
+  border: 2px solid #3c3c44;
+  box-shadow: inset 2px 2px 0px rgba(0, 0, 0, 0.5), inset -2px -2px 0px rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+}
+
+/* Minecraft-style Buttons */
+.btn-mc {
+  background-color: #585858;
+  border: 2px solid #000000;
+  box-shadow: inset 2px 2px 0px #808080, inset -2px -2px 0px #383838;
+  color: #e0e0e0;
+  font-family: 'Silkscreen', monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  padding: 8px 16px;
+  text-align: center;
+  transition: all 0.1s ease;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.btn-mc:hover:not(:disabled) {
+  background-color: #00d8df;
+  color: #000000;
+  box-shadow: inset 2px 2px 0px #5effff, inset -2px -2px 0px #00878c;
+}
+
+.btn-mc:active:not(:disabled) {
+  box-shadow: inset 2px 2px 0px #00878c, inset -2px -2px 0px #5effff;
+}
+
+.btn-mc:disabled {
+  background-color: #2c2c2c;
+  color: #6c6c6c;
+  box-shadow: none;
+  border-color: #1e1e1e;
+  cursor: not-allowed;
 }
 
 /* Custom Scrollbar */
@@ -23,35 +163,193 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: #141419;
+  border-left: 2px solid #1f1f26;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d9e4;
-  border-radius: 10px;
-  border: 2px solid #f1f5f9;
+  background: #3c3c44;
+  border: 2px solid #141419;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #b8c5d6;
+  background: #00d8df;
 }
 
-/* Glassmorphism Card */
-.glass-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-radius: 1rem;
-  border: 1px solid rgba(209, 213, 219, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+/* Fonts */
+.font-mc-title {
+  font-family: 'Press Start 2P', monospace;
+  letter-spacing: -0.05em;
+  line-height: 1.4;
 }
 
-/* General Transition */
-* {
-  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+.font-mc-sub {
+  font-family: 'Silkscreen', monospace;
+  letter-spacing: 0.05em;
 }
 
-/* Reusable primary button style */
-.btn-primary {
-  @apply bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transition-all duration-300;
+.font-mono-readable {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Minecraft Level Up Notification (Advancement Banner) */
+@keyframes slide-in-adv {
+  0% { transform: translateY(-100px); opacity: 0; }
+  15% { transform: translateY(0); opacity: 1; }
+  85% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-100px); opacity: 0; }
+}
+
+.advancement-toast {
+  background-color: #211f20;
+  border: 3px solid #f2ab13;
+  box-shadow: inset 2px 2px 0 #3a3839, inset -2px -2px 0 #111011, 0 4px 15px rgba(0,0,0,0.6);
+  border-radius: 4px;
+  animation: slide-in-adv 4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+/* Floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+/* Splash Text Rotator */
+@keyframes splash-pulse {
+  0% { transform: scale(1) rotate(-15deg); }
+  50% { transform: scale(1.12) rotate(-15deg); }
+  100% { transform: scale(1) rotate(-15deg); }
+}
+
+.mc-splash {
+  animation: splash-pulse 0.8s infinite ease-in-out;
+}
+
+/* ============ LANDING PAGE PARTICLES ============ */
+@keyframes float-particle {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(40px) rotate(180deg) scale(0.5);
+    opacity: 0;
+  }
+}
+
+.particle {
+  position: absolute;
+  bottom: -20px;
+  border-radius: 2px;
+  pointer-events: none;
+  animation: float-particle linear infinite;
+}
+
+/* ============ GLOWING CTA PULSE ============ */
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 216, 223, 0.2), 0 0 30px rgba(0, 216, 223, 0.1);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 216, 223, 0.4), 0 0 50px rgba(0, 216, 223, 0.2);
+  }
+}
+
+.glow-cta {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ============ TESTIMONIAL TICKER ============ */
+@keyframes ticker-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-track {
+  display: flex;
+  animation: ticker-scroll 30s linear infinite;
+  width: max-content;
+}
+
+.ticker-track:hover {
+  animation-play-state: paused;
+}
+
+/* ============ FEATURE CARD HOVER GLOW ============ */
+.feature-card-glow {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.feature-card-glow::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: 6px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(0,216,223,0.1), rgba(0,230,118,0.1));
+}
+
+.feature-card-glow:hover::after {
+  opacity: 1;
+}
+
+.feature-card-glow:hover {
+  border-color: rgba(0, 216, 223, 0.4) !important;
+  transform: translateY(-2px);
+  box-shadow: inset 2px 2px 0px rgba(255, 255, 255, 0.08), inset -2px -2px 0px rgba(0, 216, 223, 0.2), 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* ============ ANIMATED COUNTER GLOW ============ */
+@keyframes count-glow {
+  0%, 100% { text-shadow: 0 0 8px rgba(0, 216, 223, 0.3); }
+  50% { text-shadow: 0 0 16px rgba(0, 216, 223, 0.6); }
+}
+
+.stat-number {
+  animation: count-glow 3s ease-in-out infinite;
+}
+
+/* ============ CHOMP PROGRESS BAR ============ */
+@keyframes chomp-progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.chomp-bar {
+  animation: chomp-progress 1.8s ease-in-out forwards;
+}
+
+/* ============ NOW-SERVING PULSE ============ */
+@keyframes serve-pulse {
+  0%, 100% {
+    border-color: #00e676;
+    box-shadow: 0 0 8px rgba(0, 230, 118, 0.15);
+  }
+  50% {
+    border-color: #00e676;
+    box-shadow: 0 0 20px rgba(0, 230, 118, 0.35);
+  }
+}
+
+.now-serving {
+  animation: serve-pulse 2s ease-in-out infinite;
 }

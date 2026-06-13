@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, List, PlusCircle, Bell, Search, LogOut, Shield, Menu, X } from 'lucide-react';
+import { Home, List, PlusCircle, Bell, Search, LogOut, Shield, Menu, X, Utensils, Users } from 'lucide-react';
 import { User, UserRole } from '../types';
 
 interface NavbarProps {
@@ -52,6 +52,18 @@ export const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
                 <Search size={18} />
                 <span>Lost & Found</span>
               </NavLink>
+              {user.role === UserRole.STUDENT && (
+                <>
+                  <NavLink to="/mess" className={navItemClass}>
+                    <Utensils size={18} />
+                    <span>Mess</span>
+                  </NavLink>
+                  <NavLink to="/roommates" className={navItemClass}>
+                    <Users size={18} />
+                    <span>Roommates</span>
+                  </NavLink>
+                </>
+              )}
               {user.role === UserRole.ADMIN && (
                 <NavLink to="/admin" className={navItemClass}>
                   <Shield size={18} />
@@ -116,6 +128,18 @@ export const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
                 <PlusCircle size={18} />
                 <span>Report</span>
               </NavLink>
+              {user.role === UserRole.STUDENT && (
+                <>
+                  <NavLink to="/mess" className={navItemClass} onClick={() => setIsMenuOpen(false)}>
+                    <Utensils size={18} />
+                    <span>Mess Menu</span>
+                  </NavLink>
+                  <NavLink to="/roommates" className={navItemClass} onClick={() => setIsMenuOpen(false)}>
+                    <Users size={18} />
+                    <span>Roommate Finder</span>
+                  </NavLink>
+                </>
+              )}
               {user.role === UserRole.ADMIN && (
                 <NavLink to="/admin" className={navItemClass} onClick={() => setIsMenuOpen(false)}>
                   <Shield size={18} />

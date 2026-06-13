@@ -3,8 +3,8 @@ import { Issue, IssueCategory, IssuePriority, IssueStatus, User, UserRole, Annou
 // Initial Mock Data
 export const INITIAL_USER: User = {
   id: 'u1',
-  name: 'Alex Johnson',
-  email: 'alex.j@university.edu',
+  name: 'Aarav Sharma',
+  email: 'aarav.s@university.edu',
   role: UserRole.STUDENT,
   roomNumber: '304-B'
 };
@@ -36,7 +36,7 @@ export const INITIAL_ISSUES: Issue[] = [
     status: IssueStatus.REPORTED,
     isPrivate: false,
     reporterId: 'u1',
-    reporterName: 'Alex Johnson',
+    reporterName: 'Aarav Sharma',
     createdAt: new Date(Date.now() - 86400000).toISOString(),
     upvotes: 5,
     upvotedBy: ['u2', 'u3', 'u5', 'u6', 'u7'],
@@ -51,7 +51,7 @@ export const INITIAL_ISSUES: Issue[] = [
     status: IssueStatus.IN_PROGRESS,
     isPrivate: false,
     reporterId: 'u1',
-    reporterName: 'Alex Johnson',
+    reporterName: 'Aarav Sharma',
     createdAt: new Date(Date.now() - 172800000).toISOString(),
     upvotes: 3,
     upvotedBy: ['u2'],
@@ -66,7 +66,7 @@ export const INITIAL_ISSUES: Issue[] = [
     status: IssueStatus.REPORTED,
     isPrivate: true, // Private issue
     reporterId: 'u1',
-    reporterName: 'Alex Johnson',
+    reporterName: 'Aarav Sharma',
     createdAt: new Date(Date.now() - 3600000).toISOString(),
     upvotes: 0,
     upvotedBy: [],
@@ -81,7 +81,7 @@ export const INITIAL_ISSUES: Issue[] = [
     status: IssueStatus.REPORTED,
     isPrivate: false,
     reporterId: 'u4',
-    reporterName: 'Mike Ross',
+    reporterName: 'Vikram Patel',
     createdAt: new Date(Date.now() - 7200000).toISOString(),
     upvotes: 1,
     upvotedBy: ['u1'],
@@ -117,7 +117,7 @@ export const INITIAL_GATE_PASSES: GatePass[] = [
     {
         id: 'gp1',
         studentId: 'u1',
-        studentName: 'Alex Johnson',
+        studentName: 'Aarav Sharma',
         roomNumber: '304-B',
         leaveType: LeaveType.HOME,
         reason: 'Weekend trip to home.',
@@ -129,7 +129,7 @@ export const INITIAL_GATE_PASSES: GatePass[] = [
     {
         id: 'gp2',
         studentId: 'u1',
-        studentName: 'Alex Johnson',
+        studentName: 'Aarav Sharma',
         roomNumber: '304-B',
         leaveType: LeaveType.OUTING,
         reason: 'Going out for a movie.',
@@ -141,7 +141,7 @@ export const INITIAL_GATE_PASSES: GatePass[] = [
      {
         id: 'gp3',
         studentId: 'u1',
-        studentName: 'Alex Johnson',
+        studentName: 'Aarav Sharma',
         roomNumber: '304-B',
         leaveType: LeaveType.EMERGENCY,
         reason: 'Urgent family matter.',
