@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Utensils, Star, ThumbsUp, ThumbsDown, MessageSquare, Award, Clock } from 'lucide-react';
+import { Utensils, Star, ThumbsUp, ThumbsDown, MessageSquare, Award, Clock, Flame, RotateCcw, Sparkles } from 'lucide-react';
 
 interface Meal {
   name: string;
@@ -148,10 +148,62 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
   const [chompText, setChompText] = useState<string>('');
   const [showToast, setShowToast] = useState<{ show: boolean; title: string; desc: string }>({ show: false, title: '', desc: '' });
 
+  // Pantry & Cauldron Mini-game States
+  const [pantry, setPantry] = useState<Record<string, number>>({
+    'Nether Pepper': 2,
+    'Mana Mushroom': 2,
+    'Aegis Herb': 2,
+    'Dragon Egg': 1,
+    'Glistering Honey': 2
+  });
+  const [cauldronSlots, setCauldronSlots] = useState<string[]>([]);
+  const [isBrewing, setIsBrewing] = useState(false);
+  const [brewProgress, setBrewProgress] = useState(0);
+  const [brewText, setBrewText] = useState('');
+  const [brewedResult, setBrewedResult] = useState<{
+    name: string;
+    buff: string;
+    xp: number;
+    coins: number;
+    icon: string;
+  } | null>(null);
+  
+  const [activeBuff, setActiveBuff] = useState<{
+    name: string;
+    color: string;
+    duration: number;
+    icon: string;
+  } | null>(null);
+
+  // Active Buff Countdown Timer
+  React.useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (activeBuff && activeBuff.duration > 0) {
+      timer = setInterval(() => {
+        setActiveBuff(prev => {
+          if (!prev) return null;
+          if (prev.duration <= 1) {
+            return null;
+          }
+          return { ...prev, duration: prev.duration - 1 };
+        });
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [activeBuff]);
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${String(secs).padStart(2, '0')}`;
+  };
+
   const totalPollVotes = pollVotes.opt1 + pollVotes.opt2 + pollVotes.opt3;
 
   const handlePollVote = (option: 'opt1' | 'opt2' | 'opt3') => {
-    if (userVotedOpt === option) return; // Disallow double vote
+    if (userVotedOpt === option) return;
     
     setPollVotes(prev => {
       const updated = { ...prev };
@@ -188,6 +240,18 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
         // Reward for first time vote on this meal
         if (gainXp) gainXp(5);
         if (gainCoins) gainCoins(1);
+
+        // Loot drop
+        const ingredientsList = ['Nether Pepper', 'Mana Mushroom', 'Aegis Herb', 'Dragon Egg', 'Glistering Honey'];
+        const randomIng = ingredientsList[Math.floor(Math.random() * ingredientsList.length)];
+        setPantry(p => ({ ...p, [randomIng]: p[randomIng] + 1 }));
+        
+        setShowToast({
+          show: true,
+          title: 'INGREDIENT LOOTED!',
+          desc: `Received 1x ${randomIng} for rating menu flavor.`,
+        });
+        setTimeout(() => setShowToast({ show: false, title: '', desc: '' }), 3500);
       }
 
       return {
@@ -216,10 +280,25 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
       if (gainXp) gainXp(10);
       if (gainCoins) gainCoins(2);
       
+      // Consume diet details for active buff
+      const currentMeal = selectedDayMenu[mealKey];
+      if (currentMeal && currentMeal.items.length > 0) {
+        const primaryItem = currentMeal.items[0];
+        const itemStats = getItemRPGStats(primaryItem);
+        if (itemStats.buff) {
+          setActiveBuff({
+            name: itemStats.buff,
+            color: itemStats.buffColor || 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10',
+            duration: 90, // 1.5 minutes
+            icon: '🍗'
+          });
+        }
+      }
+
       setShowToast({
         show: true,
         title: 'DIET CONSUMED!',
-        desc: `Ate ${mealKey} for +10 XP and +2 Emeralds.`,
+        desc: `Ate ${mealKey} for +10 XP and +2 Emeralds. Added passive status buff!`,
       });
       setTimeout(() => setShowToast({ show: false, title: '', desc: '' }), 4000);
     }, 1800);
@@ -244,6 +323,163 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
     // Reward player
     if (gainXp) gainXp(15);
     if (gainCoins) gainCoins(3);
+
+    // Premium Loot drop
+    const randomIng = Math.random() > 0.5 ? 'Dragon Egg' : 'Glistering Honey';
+    setPantry(p => ({ ...p, [randomIng]: p[randomIng] + 1 }));
+    
+    setShowToast({
+      show: true,
+      title: 'TAVERN WARDEN REWARD!',
+      desc: `Received 1x ${randomIng} for detailed recipe review.`,
+    });
+    setTimeout(() => setShowToast({ show: false, title: '', desc: '' }), 3500);
+  };
+
+  const addIngredientToCauldron = (ing: string) => {
+    if (cauldronSlots.length >= 3) return;
+    if (pantry[ing] <= 0) return;
+    setPantry(prev => ({ ...prev, [ing]: prev[ing] - 1 }));
+    setCauldronSlots(prev => [...prev, ing]);
+    setBrewedResult(null);
+  };
+
+  const removeIngredientFromCauldron = (idx: number) => {
+    const ing = cauldronSlots[idx];
+    setPantry(prev => ({ ...prev, [ing]: prev[ing] + 1 }));
+    setCauldronSlots(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  const handleRavagePantry = () => {
+    setPantry(p => ({
+      'Nether Pepper': p['Nether Pepper'] + 2,
+      'Mana Mushroom': p['Mana Mushroom'] + 2,
+      'Aegis Herb': p['Aegis Herb'] + 2,
+      'Dragon Egg': p['Dragon Egg'] + 1,
+      'Glistering Honey': p['Glistering Honey'] + 1
+    }));
+    
+    setShowToast({
+      show: true,
+      title: 'PANTRY RAIDED!',
+      desc: 'Snatched raw food rations from Chef Golem\'s supply.',
+    });
+    setTimeout(() => setShowToast({ show: false, title: '', desc: '' }), 3000);
+  };
+
+  const handleBrewRation = () => {
+    if (cauldronSlots.length === 0 || isBrewing) return;
+    setIsBrewing(true);
+    setBrewProgress(0);
+    setBrewText('* IGNITING HEARTH FLAMES *');
+
+    const steps = [
+      { progress: 25, text: '* STIRRING CAULDRON *' },
+      { progress: 55, text: '* BUBBLING AND FIZZING *' },
+      { progress: 85, text: '* INFUSING POTION ESSENCE *' },
+      { progress: 100, text: '* BREW COMPLETE! *' }
+    ];
+
+    let stepIdx = 0;
+    const interval = setInterval(() => {
+      if (stepIdx < steps.length) {
+        setBrewProgress(steps[stepIdx].progress);
+        setBrewText(steps[stepIdx].text);
+        stepIdx++;
+      } else {
+        clearInterval(interval);
+        finalizeBrew();
+      }
+    }, 500);
+  };
+
+  const finalizeBrew = () => {
+    setIsBrewing(false);
+    
+    const sorted = [...cauldronSlots].sort();
+    let name = "Chef Golem's Mystery Mash";
+    let buff = "Saturation I";
+    let buffColor = "text-amber-400 border-amber-500/30 bg-amber-500/10";
+    let buffIcon = "🍗";
+    let duration = 120; // 2 minutes
+    let xp = 15;
+    let coins = 2;
+
+    const hasPepper = sorted.includes('Nether Pepper');
+    const hasMushroom = sorted.includes('Mana Mushroom');
+    const hasHerb = sorted.includes('Aegis Herb');
+    const hasEgg = sorted.includes('Dragon Egg');
+    const hasHoney = sorted.includes('Glistering Honey');
+
+    if (hasPepper && hasEgg && hasHoney) {
+      name = "Dragonfire Honey Glaze";
+      buff = "Strength II + Speed II";
+      buffColor = "text-red-400 border-red-500/30 bg-red-500/10";
+      buffIcon = "🔥";
+      duration = 240;
+      xp = 35;
+      coins = 5;
+    } else if (hasMushroom && hasHerb && hasHoney) {
+      name = "Elven Shield Ambrosia";
+      buff = "Regen II + Resist I";
+      buffColor = "text-pink-400 border-pink-500/30 bg-pink-500/10";
+      buffIcon = "💖";
+      duration = 180;
+      xp = 30;
+      coins = 4;
+    } else if (hasPepper && hasHerb) {
+      name = "Spiced Aegis Goulash";
+      buff = "Resistance II";
+      buffColor = "text-emerald-400 border-emerald-500/30 bg-emerald-500/10";
+      buffIcon = "🛡️";
+      duration = 150;
+      xp = 25;
+      coins = 3;
+    } else if (hasMushroom && hasEgg) {
+      name = "Arcane Egg Soufflé";
+      buff = "Mana Surge I";
+      buffColor = "text-purple-400 border-purple-500/30 bg-purple-500/10";
+      buffIcon = "🔮";
+      duration = 150;
+      xp = 25;
+      coins = 3;
+    } else if (hasHoney && hasMushroom) {
+      name = "Glistered Spore Delight";
+      buff = "Haste II";
+      buffColor = "text-cyan-400 border-cyan-500/30 bg-cyan-500/10";
+      buffIcon = "⚡";
+      duration = 120;
+      xp = 20;
+      coins = 3;
+    }
+
+    if (gainXp) gainXp(xp);
+    if (gainCoins) gainCoins(coins);
+
+    const newBuff = {
+      name: buff,
+      color: buffColor,
+      duration,
+      icon: buffIcon
+    };
+    setActiveBuff(newBuff);
+
+    setBrewedResult({
+      name,
+      buff,
+      xp,
+      coins,
+      icon: buffIcon
+    });
+
+    setCauldronSlots([]);
+
+    setShowToast({
+      show: true,
+      title: 'DISH COOKED!',
+      desc: `Brewed ${name} for +${xp} XP and +${coins} Emeralds!`,
+    });
+    setTimeout(() => setShowToast({ show: false, title: '', desc: '' }), 3500);
   };
 
   const days = Object.keys(weeklyMenu);
@@ -257,6 +493,35 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-8 pb-12 font-sans text-white">
+      {/* ═══ Active Potion Buff HUD (Minecraft Style status indicators) ═══ */}
+      <AnimatePresence>
+        {activeBuff && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className={`mc-card p-3.5 flex items-center justify-between border-2 ${activeBuff.color} shadow-lg max-w-xl mx-auto mt-2`}
+            style={{
+              boxShadow: 'inset 2px 2px 0 rgba(255,255,255,0.05), 0 6px 20px rgba(0,0,0,0.5)'
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-xl animate-bounce">{activeBuff.icon}</span>
+              <div>
+                <p className="text-[9px] font-mc-sub uppercase tracking-wider font-bold text-slate-400">ACTIVE STATUS BUFF</p>
+                <p className="text-[10px] font-mc-title uppercase font-black text-white mt-0.5">{activeBuff.name}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 px-3 py-1 bg-[#141419] border border-[#3c3c44] rounded">
+              <Clock size={12} className="text-slate-400 animate-spin" />
+              <span className="text-[10px] font-bold font-mono-readable text-white">
+                {formatDuration(activeBuff.duration)}
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ═══ Advancement Banner (Advancement Notification) ═══ */}
       <AnimatePresence>
         {showToast.show && (
@@ -339,6 +604,190 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
         </div>
       </div>
 
+      {/* ═══ Chef Golem's Brewing Cauldron Hearth ═══ */}
+      <div className="mc-card bg-[#1f1f26]/95 border-2 border-[#3c3c44] p-5 md:p-6 space-y-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-[#26262a] pb-3">
+          <div className="flex items-center space-x-3">
+            <span className="text-2xl">🧪</span>
+            <div>
+              <h3 className="text-sm font-black text-white font-mc-title uppercase tracking-wide">Chef Golem's Alchemical Cauldron</h3>
+              <p className="text-xs text-slate-500 font-mono-readable mt-0.5">Combine raw food rations from the pantry to brew status effects for XP, coins, and buffs!</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={handleRavagePantry}
+            className="btn-mc py-1.5 px-3 text-[8px] uppercase font-bold bg-[#ef4444]/15 border-[#ef4444]/40 text-[#ef4444] hover:bg-[#ef4444]/25 shrink-0 self-end sm:self-auto"
+          >
+            ⚡ Raid Kitchen Pantry (+rations)
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* Left Column: Pantry & Recipe Ledger (3 cols) */}
+          <div className="lg:col-span-3 space-y-5">
+            <div>
+              <h4 className="text-[9px] font-black text-slate-400 font-mc-sub uppercase mb-3.5 tracking-wider">Select Pantry Rations (Click to load Cauldron)</h4>
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {Object.entries(pantry).map(([name, count]) => {
+                  const itemEmoji = name.includes('Pepper') ? '🌶️' : name.includes('Mushroom') ? '🍄' : name.includes('Herb') ? '🌿' : name.includes('Egg') ? '🥚' : '🍯';
+                  const isAvailable = count > 0;
+                  return (
+                    <button
+                      key={name}
+                      type="button"
+                      disabled={!isAvailable || cauldronSlots.length >= 3 || isBrewing}
+                      onClick={() => addIngredientToCauldron(name)}
+                      className={`mc-card p-3 flex flex-col items-center text-center transition-all cursor-pointer select-none active:scale-95 disabled:scale-100 ${
+                        isAvailable 
+                          ? 'bg-[#141419] border-[#3c3c44] hover:border-mc-cyan' 
+                          : 'bg-[#141419]/30 border-[#26262a] opacity-40 cursor-not-allowed'
+                      }`}
+                    >
+                      <span className="text-2xl mb-1">{itemEmoji}</span>
+                      <p className="text-[9px] font-bold font-mc-sub text-white leading-tight truncate w-full">{name.split(' ')[0]}</p>
+                      <span className={`text-[8px] font-mc-sub mt-1.5 px-2 py-0.5 rounded ${
+                        isAvailable ? 'bg-mc-cyan/10 text-mc-cyan border border-mc-cyan/25' : 'bg-slate-800 text-slate-600'
+                      }`}>
+                        Qty: {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Brewing Recipe Ledger */}
+            <div className="bg-[#141419]/50 border border-[#26262a] rounded p-3 space-y-2">
+              <h5 className="text-[8px] font-black text-mc-gold font-mc-sub uppercase tracking-widest flex items-center gap-1.5">
+                <Sparkles size={10} /> Cauldron Recipe Ledger
+              </h5>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[8px] font-mono-readable text-slate-405">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-mc-cyan font-bold">🌶️ + 🥚 + 🍯</span>
+                  <span>➔ Dragonfire Honey Glaze (+35XP, Speed II)</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-mc-cyan font-bold">🍄 + 🌿 + 🍯</span>
+                  <span>➔ Elven Shield Ambrosia (+30XP, Regen II)</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-mc-cyan font-bold">🌶️ + 🌿</span>
+                  <span>➔ Spiced Aegis Goulash (+25XP, Resist II)</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-mc-cyan font-bold">🍄 + 🥚</span>
+                  <span>➔ Arcane Egg Soufflé (+25XP, Mana Surge)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Column: Cauldron Brewing Simulator (2 cols) */}
+          <div className="lg:col-span-2 bg-[#141419]/60 border border-[#26262a] rounded p-5 flex flex-col justify-between items-center text-center relative overflow-hidden min-h-[220px]">
+            {isBrewing && (
+              <div className="absolute inset-0 bg-[#f2ab13]/5 flex flex-col justify-end items-center pointer-events-none z-0">
+                <div className="w-full h-1/3 bg-gradient-to-t from-[#f2ab13]/10 to-transparent animate-pulse" />
+              </div>
+            )}
+
+            <div className="z-10 w-full space-y-3">
+              <div className="flex justify-between items-center border-b border-[#26262a] pb-2 w-full">
+                <span className="text-[8px] font-mc-sub text-slate-500 uppercase tracking-widest">Cauldron Slots (Max 3)</span>
+                {cauldronSlots.length > 0 && !isBrewing && (
+                  <button 
+                    onClick={() => {
+                      cauldronSlots.forEach((_, idx) => removeIngredientFromCauldron(0));
+                      setCauldronSlots([]);
+                    }}
+                    className="text-[8px] text-[#ef4444] font-mc-sub hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <RotateCcw size={8} /> Reset Cauldron
+                  </button>
+                )}
+              </div>
+
+              {/* Slots display */}
+              <div className="flex justify-center gap-4 py-2">
+                {[0, 1, 2].map(slotIdx => {
+                  const loadedIng = cauldronSlots[slotIdx];
+                  const itemEmoji = loadedIng ? (loadedIng.includes('Pepper') ? '🌶️' : loadedIng.includes('Mushroom') ? '🍄' : loadedIng.includes('Herb') ? '🌿' : loadedIng.includes('Egg') ? '🥚' : '🍯') : null;
+                  
+                  return (
+                    <button
+                      key={slotIdx}
+                      type="button"
+                      disabled={!loadedIng || isBrewing}
+                      onClick={() => removeIngredientFromCauldron(slotIdx)}
+                      className={`w-14 h-14 border-2 rounded flex items-center justify-center relative transition-all group ${
+                        loadedIng 
+                          ? 'bg-[#1f1f26] border-mc-cyan/60 hover:border-[#ef4444]/60 cursor-pointer shadow-md' 
+                          : 'bg-[#141419]/80 border-dashed border-[#3c3c44] cursor-default'
+                      }`}
+                    >
+                      {itemEmoji ? (
+                        <>
+                          <span className="text-2xl group-hover:scale-95 transition-transform">{itemEmoji}</span>
+                          <span className="absolute -top-1.5 -right-1.5 bg-[#ef4444] text-white text-[7px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">✕</span>
+                        </>
+                      ) : (
+                        <span className="text-[9px] text-slate-600 font-mc-sub">Empty</span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Brewing action / results display */}
+            <div className="z-10 w-full pt-4 border-t border-[#26262a] flex flex-col items-center justify-center">
+              {isBrewing ? (
+                <div className="w-full space-y-2.5">
+                  <div className="flex justify-between items-center text-[8px] font-mc-sub uppercase text-[#ffbe00]">
+                    <span className="animate-pulse">{brewText}</span>
+                    <span>Brewing...</span>
+                  </div>
+                  <div className="w-full h-3 bg-[#141419] border border-[#3c3c44] p-0.5 rounded-sm overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-mc-cyan to-[#00e676] chomp-bar" 
+                      style={{ width: `${brewProgress}%` }}
+                    />
+                  </div>
+                </div>
+              ) : brewedResult ? (
+                <motion.div 
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className="space-y-1.5"
+                >
+                  <p className="text-[8px] font-mc-sub text-[#00e676] uppercase tracking-wider font-bold">Successfully Brewed!</p>
+                  <h4 className="text-xs font-black text-[#ffbe00] font-mc-title uppercase tracking-wide flex items-center justify-center gap-1.5">
+                    <span>{brewedResult.icon}</span> {brewedResult.name}
+                  </h4>
+                  <p className="text-[8px] text-slate-400 font-mono-readable">
+                    Gained +{brewedResult.xp} XP, +{brewedResult.coins} Emeralds, and active {brewedResult.buff} buff!
+                  </p>
+                </motion.div>
+              ) : (
+                <button
+                  type="button"
+                  disabled={cauldronSlots.length === 0}
+                  onClick={handleBrewRation}
+                  className={`btn-mc w-full py-2.5 uppercase text-[9px] font-bold flex items-center justify-center gap-2 ${
+                    cauldronSlots.length > 0 
+                      ? 'bg-mc-cyan text-black border-mc-cyan glow-cta' 
+                      : 'bg-zinc-800 text-zinc-500 border-zinc-950 opacity-50 cursor-not-allowed'
+                  }`}
+                >
+                  <Flame size={12} className={cauldronSlots.length > 0 ? "animate-pulse" : ""} />
+                  Brew Cauldron Rations
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Weekday Selector */}
       <div className="flex overflow-x-auto pb-2 gap-2.5 scrollbar-none">
         {days.map(day => (
@@ -372,7 +821,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
                 transition={{ duration: 0.2 }}
-                className={`mc-card bg-[#1f1f26] flex flex-col justify-between overflow-hidden transition-all ${
+                className={`mc-card bg-[#1f1f26] flex flex-col justify-between overflow-hidden transition-all hover:border-mc-cyan/30 hover:shadow-lg hover:shadow-mc-cyan/5 ${
                   isServingNow ? 'now-serving border-[#00e676] border-2 shadow-[0_0_15px_rgba(0,230,118,0.25)]' : ''
                 }`}
               >

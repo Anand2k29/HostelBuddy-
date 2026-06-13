@@ -1,30 +1,11 @@
 # 🏨 HostelBuddy — Gamified Campus Management OS
 
-> **Winner Submission for Campus Hackathon**  
+> **Winner Submission for WebForge - A smart Campus Webathon**  
 > **Team Name:** Kernel  
 > **Members:**  
-> 1. 🎓 **Jyotasana** — Frontend Architect & UI/UX Lead  
-> 2. 🎓 **Arpita Matta** — System Designer & Data Modeler  
-> 3. 🎓 **Anand Minejes** — Full-stack Engineer & AI Integrator  
-
----
-
-<h3 align="center">🎥 Watch the Project Demo</h3>
-
-<div align="center">
-  <a href="https://youtu.be/zZI7R--nfac" target="_blank">
-    <img src="https://github.com/user-attachments/assets/46388e1c-aaa6-4e09-b64a-3f728a5bb9a3" 
-         style="width: 100%; max-width: 800px; border-radius: 6px; border: 3px solid #101014; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);" 
-         alt="HostelBuddy Demo Video" />
-  </a>
-  
-  <br />
-  <br />
-  
-  <a href="https://youtu.be/zZI7R--nfac" target="_blank" style="font-family: 'Press Start 2P', monospace; font-size: 14px; color: #00d8df;">
-    <b>⚔️ CLICK HERE TO WATCH THE VIDEO DEMO ⚔️</b>
-  </a>
-</div>
+> 1. 🎓 **Arpita Matta**
+> 2. 🎓 **Jyotasana** 
+> 3. 🎓 **Anand Minejes**  
 
 ---
 
@@ -79,7 +60,7 @@ HostelBuddy digitizes the entire lifecycle of hostel life—from outpasses and m
 - **Server Leaderboard:** Compete for high scores. Click rows to inspect player stats, streaks, and achievements.
 - **Active Quest Log Timelines:** View a 4-step progress tracker (`Reported` ➔ `Assigned` ➔ `In Progress` ➔ `Resolved`) under active issue logs.
 - **Gate Pass Panel:** Draft outpass requests and view approved secure QR credentials.
-- **Mess Kitchen Feast Menu:** Live weekly menus with active serve times.
+- **Mess Kitchen Cauldron & Buff HUD:** Live weekly menus featuring real-time "Now Serving" alerts. Mix raw ingredients (*Nether Pepper*, *Mana Mushroom*, *Aegis Herb*, *Dragon Egg*, *Glistering Honey*) in Chef Golem's alchemical cauldron to cook custom dishes for XP, Emeralds, and status buffs. Active status effects (like *Strength*, *Speed*, *Regeneration*) are displayed in a ticking Active Buff HUD with real-time countdown timers. Voting and reviewing menu items drops random ingredient loot into your pantry.
 - **Roommate Finder:** Complete personality surveys to calculate compatibility percentages.
 - **Lost & Found Vault:** Browse and report misplaced items in a grid.
 

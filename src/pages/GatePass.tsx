@@ -159,8 +159,13 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
 
   const applyPreset = (hours: number) => {
     const now = new Date();
-    setDepartureDate(formatDateTimeLocal(now));
-    setReturnDate(formatDateTimeLocal(new Date(now.getTime() + hours * 60 * 60 * 1000)));
+    const returnDt = new Date(now.getTime() + hours * 60 * 60 * 1000);
+    
+    const depStr = formatDateTimeLocal(now);
+    const retStr = formatDateTimeLocal(returnDt);
+    
+    setDepartureDate(depStr);
+    setReturnDate(retStr);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -195,195 +200,178 @@ export const GatePass: React.FC<GatePassProps> = ({ user, passes, onNewPass }) =
   const selectedLeave = LEAVE_LABELS[leaveType] || LEAVE_LABELS[LeaveType.OUTING];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 text-white">
+    <div className="space-y-6 text-white font-sans max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3 border-b border-[#26262a] pb-5">
-        <div className="w-10 h-10 bg-[#1f1f26] border-2 border-[#101014] rounded flex items-center justify-center text-mc-cyan shadow-inner">
+        <div className="w-10 h-10 bg-[#1f1f26] border-2 border-[#101014] rounded flex items-center justify-center text-mc-cyan shadow-inner shrink-0">
           <Ticket size={18} />
         </div>
         <div>
-          <h1 className="text-lg font-black text-white font-mc-title uppercase tracking-wide">Portal Gateway Ledger</h1>
+          <h1 className="text-xl font-black text-white font-mc-title uppercase tracking-wide">Portal Gateway Ledger</h1>
           <p className="text-slate-400 font-mono-readable text-xs mt-0.5">[ Forge portal runes to travel beyond the hostel campus walls ]</p>
         </div>
       </div>
 
-      {/* Tab Selector */}
-      <div className="flex gap-2.5">
-        <button
-          onClick={() => setActiveTab('REQUEST')}
-          className={`btn-mc flex-1 flex items-center justify-center gap-2 text-[10px] uppercase ${
-            activeTab === 'REQUEST' ? 'bg-mc-cyan text-black border-mc-cyan' : 'bg-[#1f1f26] text-slate-400 border-[#26262a]'
-          }`}
-        >
-          <Plus size={12} /> Forge New Rune
-        </button>
-        <button
-          onClick={() => setActiveTab('HISTORY')}
-          className={`btn-mc flex-1 flex items-center justify-center gap-2 text-[10px] uppercase ${
-            activeTab === 'HISTORY' ? 'bg-mc-cyan text-black border-mc-cyan' : 'bg-[#1f1f26] text-slate-400 border-[#26262a]'
-          }`}
-        >
-          <History size={12} /> Passage Archive
-        </button>
-      </div>
+      {/* Grid Layout (utilizing page) */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        
+        {/* Left: Forge Passage Rune Console (3 columns) */}
+        <div className="lg:col-span-3 mc-card bg-[#1f1f26]/90 p-6 space-y-6 flex flex-col justify-between">
+          <div className="border-b border-[#26262a] pb-3">
+            <h2 className="text-sm font-black text-white font-mc-title uppercase">Inscribe Portal Passage Rune</h2>
+            <p className="text-xs text-slate-500 font-mono-readable mt-1">Select your route, choose date-times from the calendar, and submit for warden approval</p>
+          </div>
 
-      {/* Content Area */}
-      <div className="mc-card bg-[#1f1f26]/90 p-6 md:p-8">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeTab}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            {activeTab === 'REQUEST' && (
-              <form onSubmit={handleSubmit} className="space-y-6 max-w-lg mx-auto">
-                <div className="text-center mb-2">
-                  <h2 className="text-sm font-black text-white font-mc-title uppercase">Inscribe Portal Passage Rune</h2>
-                  <p className="text-xs text-slate-500 font-mono-readable mt-1">Select your route, log your quest objectives, and submit for warden approval</p>
-                </div>
-
-                {/* Leave Type Selection */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Destination Route</label>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {Object.entries(LEAVE_LABELS).map(([key, info]) => (
-                      <button
-                        key={key}
-                        type="button"
-                        onClick={() => setLeaveType(key as LeaveType)}
-                        className={`p-3 rounded border text-left transition-all ${
-                          leaveType === key
-                            ? 'bg-[#141419] shadow-lg'
-                            : 'bg-[#1f1f26] hover:bg-[#141419] border-[#26262a]'
-                        }`}
-                        style={{
-                          borderColor: leaveType === key ? info.color : undefined,
-                          boxShadow: leaveType === key ? `0 0 12px ${info.color}25` : undefined,
-                        }}
-                      >
-                        <span className="text-lg block mb-1">{info.icon}</span>
-                        <p className="text-[11px] font-mc-sub uppercase font-bold" style={{ color: info.color }}>{info.name}</p>
-                        <p className="text-[10px] text-slate-500 font-mono-readable mt-0.5 leading-relaxed">{info.desc}</p>
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Date Fields & Presets */}
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Portal Outbound Time</label>
-                      <input
-                        type="datetime-local"
-                        required
-                        value={departureDate}
-                        onChange={(e) => setDepartureDate(e.target.value)}
-                        className="w-full text-sm font-bold font-mono-readable py-3 px-4 bg-[#141419] border-2 border-[#3c3c44] rounded text-white focus:border-mc-cyan outline-none transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Portal Return Time</label>
-                      <input
-                        type="datetime-local"
-                        required
-                        value={returnDate}
-                        onChange={(e) => setReturnDate(e.target.value)}
-                        className="w-full text-sm font-bold font-mono-readable py-3 px-4 bg-[#141419] border-2 border-[#3c3c44] rounded text-white focus:border-mc-cyan outline-none transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Quick Preset Buttons */}
-                  <div className="p-4 bg-[#141419]/50 border border-[#26262a] rounded">
-                    <span className="text-[10px] font-bold text-slate-500 uppercase font-mc-sub tracking-wider block mb-2">
-                      ⏳ Quick Outpass Duration Presets
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {[
-                        { label: '⚡ 4 Hours (Short Outing)', hours: 4 },
-                        { label: '🌙 12 Hours (Rest Shift)', hours: 12 },
-                        { label: '🏠 24 Hours (Overnight)', hours: 24 },
-                        { label: '🏰 3 Days (Weekend Leave)', hours: 72 },
-                      ].map(preset => (
-                        <button
-                          key={preset.label}
-                          type="button"
-                          onClick={() => applyPreset(preset.hours)}
-                          className="px-3 py-2 bg-[#141419] border border-[#3c3c44] hover:border-mc-cyan rounded text-[9px] font-mc-sub uppercase text-slate-300 hover:text-white transition-all cursor-pointer shadow-inner active:scale-95"
-                        >
-                          {preset.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Reason */}
-                <div>
-                  <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Quest Objectives Scroll</label>
-                  <textarea
-                    rows={3}
-                    required
-                    value={reason}
-                    onChange={(e) => setReason(e.target.value)}
-                    className="w-full text-sm font-mono-readable py-3 px-4 bg-[#141419] border-2 border-[#3c3c44] rounded text-white focus:border-mc-cyan outline-none transition-all resize-none"
-                    placeholder="Describe your travel quest objectives..."
-                  />
-                </div>
-
-                {/* Active Route Preview */}
-                <div className="bg-[#141419] border border-[#3c3c44] rounded p-3 flex items-center gap-3">
-                  <span className="text-xl">{selectedLeave.icon}</span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-mc-sub uppercase font-bold" style={{ color: selectedLeave.color }}>{selectedLeave.name}</p>
-                    <p className="text-[10px] text-slate-500 font-mono-readable">{selectedLeave.desc}</p>
-                  </div>
-                  <Zap size={14} style={{ color: selectedLeave.color }} className="shrink-0" />
-                </div>
-
-                {/* Submit / Forging State */}
-                {isForging ? (
-                  <div className="space-y-3 py-2">
-                    <div className="flex justify-between items-center text-[9px] font-mc-sub uppercase text-[#ffbe00]">
-                      <span className="animate-pulse">{forgeText}</span>
-                      <span>Forging...</span>
-                    </div>
-                    <div className="w-full h-3 bg-[#141419] border border-[#3c3c44] p-0.5 rounded-sm overflow-hidden">
-                      <div className="h-full bg-mc-cyan chomp-bar" />
-                    </div>
-                  </div>
-                ) : (
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Leave Type Selection */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Destination Route</label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {Object.entries(LEAVE_LABELS).map(([key, info]) => (
                   <button
-                    type="submit"
-                    className="btn-mc w-full flex items-center justify-center gap-2 py-3 uppercase text-[10px] glow-cta"
+                    key={key}
+                    type="button"
+                    onClick={() => setLeaveType(key as LeaveType)}
+                    className={`p-3 rounded border text-left transition-all cursor-pointer ${
+                      leaveType === key
+                        ? 'bg-[#141419] shadow-lg'
+                        : 'bg-[#1f1f26] hover:bg-[#141419] border-[#26262a]'
+                    }`}
+                    style={{
+                      borderColor: leaveType === key ? info.color : undefined,
+                      boxShadow: leaveType === key ? `0 0 12px ${info.color}25` : undefined,
+                    }}
                   >
-                    <Sparkles size={14} />
-                    Inscribe Portal Rune
+                    <span className="text-lg block mb-1">{info.icon}</span>
+                    <p className="text-[11px] font-mc-sub uppercase font-bold" style={{ color: info.color }}>{info.name}</p>
+                    <p className="text-[10px] text-slate-500 font-mono-readable mt-0.5 leading-relaxed">{info.desc}</p>
                   </button>
-                )}
-              </form>
-            )}
-            {activeTab === 'HISTORY' && (
-              <div>
-                <h2 className="text-xs font-black text-white font-mc-title uppercase text-center mb-6">Passage Archive Ledger</h2>
-                {passes.length > 0 ? (
-                    <div className="space-y-5">
-                        {passes.map(pass => <GatePassCard key={pass.id} pass={pass} />)}
-                    </div>
-                ) : (
-                    <div className="text-center py-12">
-                        <MapPin size={32} className="mx-auto text-slate-600 mb-4" />
-                        <h3 className="text-xs font-mc-title text-slate-400 uppercase">No Portal Runes Found</h3>
-                        <p className="text-[10px] text-slate-500 font-mono-readable mt-2">You haven't forged any passage runes yet. Create your first one above.</p>
-                    </div>
-                )}
+                ))}
               </div>
+            </div>
+
+            {/* Portal Outbound & Return Time (Calendar Type Inputs) */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">
+                  🛫 PORTAL OUTBOUND TIME
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={departureDate}
+                  onChange={(e) => setDepartureDate(e.target.value)}
+                  style={{ colorScheme: 'dark' }}
+                  className="w-full bg-[#141419] border-2 border-[#3c3c44] rounded text-white p-3.5 focus:border-mc-cyan outline-none text-sm font-bold font-mono-readable cursor-pointer"
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">
+                  🛬 PORTAL RETURN TIME
+                </label>
+                <input
+                  type="datetime-local"
+                  required
+                  value={returnDate}
+                  onChange={(e) => setReturnDate(e.target.value)}
+                  style={{ colorScheme: 'dark' }}
+                  className="w-full bg-[#141419] border-2 border-[#3c3c44] rounded text-white p-3.5 focus:border-mc-gold outline-none text-sm font-bold font-mono-readable cursor-pointer"
+                />
+              </div>
+            </div>
+
+            {/* Quick Outpass Duration Presets */}
+            <div className="space-y-2">
+              <span className="text-[10px] font-mc-sub text-slate-400 uppercase tracking-wider block">
+                ⚡ QUICK OUTPASS DURATION PRESETS
+              </span>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { label: '4 Hours (Short Outing)', hours: 4 },
+                  { label: '12 Hours (Rest Shift)', hours: 12 },
+                  { label: '24 Hours (Overnight)', hours: 24 },
+                  { label: '3 Days (Weekend Leave)', hours: 72 },
+                ].map(preset => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => applyPreset(preset.hours)}
+                    className="py-2.5 px-3 bg-[#141419] border-2 border-[#3c3c44] hover:border-mc-cyan rounded text-[8px] font-mc-sub uppercase text-slate-350 hover:text-white transition-all cursor-pointer shadow-inner active:scale-95 text-center"
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Reason */}
+            <div>
+              <label className="text-xs font-bold text-slate-400 font-mc-sub tracking-wider block mb-2">Quest Objectives Scroll</label>
+              <textarea
+                rows={3}
+                required
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                className="w-full text-sm font-mono-readable py-3 px-4 bg-[#141419] border-2 border-[#3c3c44] rounded text-white focus:border-mc-cyan outline-none transition-all resize-none"
+                placeholder="Describe your travel quest objectives..."
+              />
+            </div>
+
+            {/* Active Route Preview */}
+            <div className="bg-[#141419] border border-[#3c3c44] rounded p-3 flex items-center gap-3">
+              <span className="text-xl">{selectedLeave.icon}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-[11px] font-mc-sub uppercase font-bold" style={{ color: selectedLeave.color }}>{selectedLeave.name}</p>
+                <p className="text-[10px] text-slate-500 font-mono-readable">{selectedLeave.desc}</p>
+              </div>
+              <Zap size={14} style={{ color: selectedLeave.color }} className="shrink-0" />
+            </div>
+
+            {/* Submit / Forging State */}
+            {isForging ? (
+              <div className="space-y-3 py-2">
+                <div className="flex justify-between items-center text-[9px] font-mc-sub uppercase text-[#ffbe00]">
+                  <span className="animate-pulse">{forgeText}</span>
+                  <span>Forging...</span>
+                </div>
+                <div className="w-full h-3 bg-[#141419] border border-[#3c3c44] p-0.5 rounded-sm overflow-hidden">
+                  <div className="h-full bg-mc-cyan chomp-bar" />
+                </div>
+              </div>
+            ) : (
+              <button
+                type="submit"
+                className="btn-mc w-full flex items-center justify-center gap-2 py-3 uppercase text-[10px] glow-cta"
+              >
+                <Sparkles size={14} />
+                Inscribe Portal Rune
+              </button>
             )}
-          </motion.div>
-        </AnimatePresence>
+          </form>
+        </div>
+
+        {/* Right: Passage Archive Ledger (2 columns) */}
+        <div className="lg:col-span-2 space-y-5">
+          <div className="mc-card bg-[#1f1f26]/90 p-5 space-y-4">
+            <div className="border-b border-[#26262a] pb-3 flex justify-between items-center">
+              <h3 className="text-xs font-black text-white font-mc-title uppercase">Passage Archive</h3>
+              <span className="text-[9px] text-[#00d8df] font-mc-sub uppercase tracking-wider">Scroll Records</span>
+            </div>
+            
+            <div className="space-y-5 max-h-[800px] overflow-y-auto pr-1">
+              {passes.length > 0 ? (
+                passes.map(pass => <GatePassCard key={pass.id} pass={pass} />)
+              ) : (
+                <div className="text-center py-12">
+                  <MapPin size={32} className="mx-auto text-slate-600 mb-4 animate-bounce" />
+                  <h3 className="text-xs font-mc-title text-slate-400 uppercase">No Portal Runes Found</h3>
+                  <p className="text-[10px] text-slate-500 font-mono-readable mt-2">You haven't forged any passage runes yet.</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
