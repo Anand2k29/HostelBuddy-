@@ -1,6 +1,7 @@
-# 🏨 HostelBuddy - Smart Hostel Management System
+<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/2b29ecd4-8ccd-4129-8d05-5c77aff7947b" />![HB poster](https://github.com/user-attachments/assets/2fd3ef05-8689-493f-8956-e230aefb7d93)# 🏨 HostelBuddy - Smart Hostel Management System
 
-[![HostelBuddy Demo]](https://youtu.be/zZI7R--nfac)
+[![HostelBuddy Demo](<img width="1024" height="572" alt="image" src="https://github.com/user-attachments/assets/f50d1b84-0a14-4013-91da-29bf300106f9" />
+)](https://youtu.be/zZI7R--nfac)
 > *Click the image above to watch the project demo video.*
 
 ## 📖 About The Project
