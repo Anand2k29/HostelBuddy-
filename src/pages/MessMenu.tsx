@@ -359,7 +359,7 @@ export const MessMenu: React.FC<MessMenuProps> = ({ gainXp, gainCoins }) => {
       {/* Meals Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <AnimatePresence mode="wait">
-          {Object.entries(selectedDayMenu).map(([mealKey, meal]) => {
+          {(Object.entries(selectedDayMenu) as [string, Meal][]).map(([mealKey, meal]) => {
             const isServingNow = activeMealKey === mealKey;
             const mealId = `${selectedDay}-${mealKey}`;
             const hasBeenEaten = eatenMeals.includes(mealId);

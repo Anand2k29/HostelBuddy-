@@ -16,7 +16,7 @@ import { MessMenu } from './pages/MessMenu';
 import { RoommateFinder } from './pages/RoommateFinder';
 import { AIChatbot } from './components/AIChatbot';
 import { User, UserRole, Issue, Announcement, LostItem, GatePass as IGatePass, GatePassStatus } from './types';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { INITIAL_ISSUES, INITIAL_ANNOUNCEMENTS, INITIAL_LOST_ITEMS, INITIAL_GATE_PASSES } from './services/mockStore';
 import { Unauthorized } from './pages/Unauthorized';
 
@@ -171,7 +171,7 @@ const AppContent: React.FC = () => {
               <Route path="/profile" element={<UserProfile user={user} issues={issues} userXp={userXp} userLevel={userLevel} userCoins={userCoins} />} />
               <Route path="/issues" element={<IssueBoard user={user} issues={issues} onUpdate={updateIssue} />} />
               <Route path="/report" element={<ReportIssue user={user} onReport={(issue) => { addIssue(issue); gainXp(30); gainCoins(10); }} />} />
-              <Route path="/announcements" element={<Announcements user={user} data={announcements} onAdd={handleAddAnnouncement} />} />
+              <Route path="/announcements" element={<Announcements user={user} data={announcements} onAdd={handleAddAnnouncement} gainXp={gainXp} gainCoins={gainCoins} />} />
               <Route path="/lost-found" element={<LostFound items={lostItems} onAdd={(item) => { handleAddLostItem(item); gainXp(25); gainCoins(8); }} />} />
               <Route path="/ragging" element={<AntiRagging user={user} onReport={addIssue} />} />
               <Route path="/outpass" element={<GatePass user={user} passes={gatePasses.filter(p => p.studentId === user.id)} onNewPass={(pass) => { addGatePass(pass); gainXp(20); gainCoins(5); }} />} />

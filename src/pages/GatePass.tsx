@@ -16,7 +16,7 @@ type Tab = 'REQUEST' | 'HISTORY';
 const LEAVE_LABELS: Record<string, { name: string; desc: string; icon: string; color: string }> = {
   [LeaveType.OUTING]: { name: 'Tavern Outing Route', desc: 'Short duration patrol outside campus walls', icon: '🍺', color: '#00d8df' },
   [LeaveType.HOME]: { name: 'Faction Quest Route', desc: 'Long duration journey to home faction base', icon: '🏰', color: '#ffbe00' },
-  [LeaveType.MEDICAL]: { name: 'Sanctuary Healing Route', desc: 'Emergency teleport to medical healing outpost', icon: '💊', color: '#00e676' },
+  [LeaveType.EMERGENCY]: { name: 'Sanctuary Healing Route', desc: 'Emergency teleport to medical healing outpost', icon: '💊', color: '#00e676' },
 };
 
 /* ─── Status timeline steps ─── */
