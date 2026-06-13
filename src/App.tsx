@@ -76,6 +76,16 @@ const AppContent: React.FC = () => {
     setAnnouncements([newAnnouncement, ...announcements]);
   };
 
+  const handleAddLostItem = async (item: Omit<LostItem, 'id' | 'date'>) => {
+    const newLostItem: LostItem = {
+      id: `li-${Date.now()}`,
+      date: new Date().toISOString(),
+      ...item,
+    };
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setLostItems([newLostItem, ...lostItems]);
+  };
+
   const updateGatePassStatus = async (passId: string, status: GatePassStatus) => {
     await new Promise(resolve => setTimeout(resolve, 300));
     setGatePasses(passes => passes.map(p => p.id === passId ? { ...p, status } : p));
@@ -120,7 +130,7 @@ const AppContent: React.FC = () => {
             <Route path="/issues" element={<IssueBoard user={user} issues={issues} onUpdate={updateIssue} />} />
             <Route path="/report" element={<ReportIssue user={user} onReport={addIssue} />} />
             <Route path="/announcements" element={<Announcements user={user} data={announcements} onAdd={handleAddAnnouncement} />} />
-            <Route path="/lost-found" element={<LostFound items={lostItems} />} />
+            <Route path="/lost-found" element={<LostFound items={lostItems} onAdd={handleAddLostItem} />} />
             <Route path="/ragging" element={<AntiRagging user={user} onReport={addIssue} />} />
             <Route path="/outpass" element={<GatePass user={user} passes={gatePasses.filter(p => p.studentId === user.id)} onNewPass={addGatePass} />} />
           </Route>
