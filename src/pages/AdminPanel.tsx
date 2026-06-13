@@ -11,10 +11,12 @@ interface AdminPanelProps {
 }
 
 const mockUsers: User[] = [
-  { id: '1', name: 'John Doe', email: 'john.d@example.com', role: UserRole.STUDENT, roomNumber: '101A' },
-  { id: '2', name: 'Jane Smith', email: 'jane.s@example.com', role: UserRole.STUDENT, roomNumber: '102B' },
-  { id: '3', name: 'Peter Jones', email: 'peter.j@example.com', role: UserRole.STUDENT, roomNumber: '103C' },
-  { id: '4', name: 'Mary Johnson', email: 'mary.j@example.com', role: UserRole.STUDENT, roomNumber: '104D' },
+  { id: 'u101', name: "Vihaan 'Vee' Malhotra", email: 'vihaan.m@college.edu', role: UserRole.STUDENT, roomNumber: '101' },
+  { id: 'u102', name: "Diya 'Dee' Kapoor", email: 'diya.k@college.edu', role: UserRole.STUDENT, roomNumber: '102' },
+  { id: 'u103', name: "Ishaan Verma", email: 'ishaan.v@college.edu', role: UserRole.STUDENT, roomNumber: '201' },
+  { id: 'u104', name: "Kiara Advani", email: 'kiara.a@college.edu', role: UserRole.STUDENT, roomNumber: '202' },
+  { id: 'a201', name: "Warden Suresh Reddy", email: 'warden@college.edu', role: UserRole.ADMIN, roomNumber: 'Office' },
+  { id: 'a202', name: "Matron Geeta Ben", email: 'geeta.b@college.edu', role: UserRole.ADMIN, roomNumber: 'Office' },
 ];
 
 type AdminTab = 'ISSUES' | 'PASSES' | 'USERS' | 'ANALYTICS';

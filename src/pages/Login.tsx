@@ -32,7 +32,25 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
-      const user = await mockSignInWithGoogle();
+      let user = await mockSignInWithGoogle(); // Get base mock user
+
+      // Override user details based on selected role
+      if (selectedRoleFromLanding === UserRole.ADMIN) {
+        user = {
+          ...user,
+          name: "Warden Suresh Reddy",
+          email: "warden@college.edu",
+          photoURL: "https://api.dicebear.com/8.x/initials/svg?seed=Felix"
+        };
+      } else { // Default to Student
+        user = {
+          ...user,
+          name: "Aarav Sharma",
+          email: "aarav.s@student.college.edu",
+          photoURL: "https://api.dicebear.com/8.x/initials/svg?seed=Aarav"
+        };
+      }
+
       handleAuthSuccess(user);
     } catch (error) {
       console.error(error);
