@@ -206,7 +206,7 @@ export const Landing: React.FC = () => {
       </nav>
 
       {/* ═══ Hero Section ═══ */}
-      <section className="flex-1 flex items-center px-6 md:px-16 py-20 md:py-32 max-w-7xl mx-auto w-full relative z-20">
+      <section className="flex-1 flex items-center px-6 md:px-16 py-8 md:py-14 max-w-7xl mx-auto w-full relative z-20">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center w-full">
 
           {/* Left Column */}
@@ -227,7 +227,7 @@ export const Landing: React.FC = () => {
               Server Online — {new Date().toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long' })}
             </motion.div>
 
-            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+            <motion.div variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="relative">
               <h1
                 className="text-4xl md:text-6xl font-black text-white font-mc-title uppercase leading-tight select-none"
                 style={{ textShadow: '3px 3px 0px #111011, 6px 6px 0px rgba(0,0,0,0.15)' }}
@@ -235,6 +235,10 @@ export const Landing: React.FC = () => {
                 Hostel<br />
                 <span className="text-mc-cyan">Buddy</span>
               </h1>
+              {/* Pulsing Yellow Splash Text */}
+              <span className="absolute -bottom-2 right-12 md:right-24 text-mc-gold font-mc-sub text-[10px] md:text-xs uppercase mc-splash tracking-wider drop-shadow-[2px_2px_0_rgba(0,0,0,0.8)] pointer-events-none select-none z-30">
+                Warden Approved!
+              </span>
               <p className="mt-3 text-[11px] md:text-xs text-slate-400 font-mc-sub uppercase tracking-widest">
                 Your Complete Hostel Management Platform
               </p>
@@ -296,12 +300,12 @@ export const Landing: React.FC = () => {
               {/* Header */}
               <div className="flex justify-between items-center border-b border-[#26262a] pb-4">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-[#141419] border-2 border-[#3c3c44] rounded flex items-center justify-center font-mc-title text-sm text-mc-cyan shadow-inner">
-                    A
+                  <div className="w-10 h-10 bg-[#141419] border-2 border-[#ffbe00] rounded flex items-center justify-center font-mc-title text-sm text-mc-gold shadow-inner">
+                    G
                   </div>
                   <div>
-                    <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase">Aarav Sharma</h3>
-                    <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Room 301 · Block B · 3rd Year</p>
+                    <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase">Quest Guild Board</h3>
+                    <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Guild Hall · Block B · Level 5 Explorer</p>
                   </div>
                 </div>
                 <div className="text-right">
@@ -313,9 +317,9 @@ export const Landing: React.FC = () => {
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-3">
                 {[
-                  { label: 'Issues Filed', value: '3', color: 'text-mc-cyan' },
+                  { label: 'Active Quests', value: '3', color: 'text-mc-cyan' },
                   { label: 'Gate Passes', value: '2', color: 'text-emerald-400' },
-                  { label: 'Emeralds', value: '85', color: 'text-mc-gold' },
+                  { label: 'Emerald Bank', value: '85', color: 'text-mc-gold' },
                 ].map(stat => (
                   <div key={stat.label} className="mc-slot p-3 text-center space-y-1">
                     <p className={`text-lg font-black font-mc-title ${stat.color}`}>{stat.value}</p>
@@ -343,11 +347,11 @@ export const Landing: React.FC = () => {
 
               {/* Today's Activity */}
               <div className="border-t border-[#26262a] pt-4 space-y-2">
-                <p className="text-[8px] text-slate-500 font-mc-sub uppercase tracking-wider">Today's Activity</p>
+                <p className="text-[8px] text-slate-500 font-mc-sub uppercase tracking-wider">Guild Activity Log</p>
                 {[
-                  { icon: '🔧', text: 'Plumbing issue reported in Block B', status: 'In Progress', statusColor: 'text-blue-400' },
-                  { icon: '🍽️', text: 'Rated today\'s lunch — 4 stars', status: 'Done', statusColor: 'text-emerald-400' },
-                  { icon: '🎫', text: 'Gate pass approved for weekend', status: 'Approved', statusColor: 'text-emerald-400' },
+                  { icon: '🛡️', text: 'Warden outpass approved for weekend', status: 'Approved', statusColor: 'text-emerald-400' },
+                  { icon: '🍗', text: 'Monday Breakfast rated — 5 stars', status: 'Done', statusColor: 'text-emerald-400' },
+                  { icon: '🏹', text: 'WiFi issue reported in library logs', status: 'Active', statusColor: 'text-blue-400' },
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2.5 text-[10px] font-mono-readable">
                     <span className="text-base shrink-0">{item.icon}</span>

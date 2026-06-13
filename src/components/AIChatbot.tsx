@@ -139,7 +139,7 @@ export const AIChatbot: React.FC = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 100 }}
             transition={{ type: 'spring', damping: 24, stiffness: 220 }}
-            className="w-[360px] h-[520px] mb-4 bg-[#1f1f26] border-3 border-[#101014] rounded-sm shadow-2xl flex flex-col overflow-hidden"
+            className="w-[360px] h-[520px] mb-4 bg-[#1f1f26] border-4 border-[#ffbe00] rounded-sm shadow-2xl flex flex-col overflow-hidden"
             style={{
               boxShadow: 'inset 2px 2px 0px rgba(255, 255, 255, 0.05), inset -2px -2px 0px rgba(0, 0, 0, 0.3), 0 12px 36px rgba(0,0,0,0.6)'
             }}
@@ -248,7 +248,7 @@ export const AIChatbot: React.FC = () => {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 bg-[#1f1f26] border-3 border-[#101014] rounded-sm flex items-center justify-center shadow-2xl cursor-pointer relative"
+        className="w-14 h-14 bg-[#1f1f26] border-3 border-[#ffbe00] rounded-sm flex items-center justify-center shadow-2xl cursor-pointer relative"
         style={{
           boxShadow: 'inset 2px 2px 0px rgba(255, 255, 255, 0.1), inset -2px -2px 0px rgba(0, 0, 0, 0.4), 0 6px 20px rgba(0, 0, 0, 0.5)'
         }}
