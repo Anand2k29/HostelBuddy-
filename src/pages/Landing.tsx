@@ -242,7 +242,7 @@ export const Landing: React.FC = () => {
         </motion.div>
 
         {/* Two-Column Cards Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch w-full max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch w-full max-w-6xl mx-auto">
           
           {/* Left Column: Dashboard Preview Card */}
           <motion.div
@@ -251,37 +251,44 @@ export const Landing: React.FC = () => {
             transition={{ delay: 0.2, type: 'spring', stiffness: 60, damping: 15 }}
             className="relative w-full flex flex-col"
           >
-            <div className="absolute -inset-6 bg-gradient-to-br from-[#00d8df]/8 via-transparent to-[#00e676]/8 rounded-xl blur-2xl" />
+            <div className="absolute -inset-4 bg-gradient-to-br from-[#00d8df]/10 via-transparent to-[#00e676]/10 rounded-xl blur-2xl" />
 
-            <div className="mc-card p-6 space-y-5 bg-[#1f1f26]/95 relative overflow-hidden animate-float flex-1 flex flex-col justify-between">
+            <div className="mc-card p-5 md:p-6 bg-[#1f1f26]/95 relative overflow-hidden animate-float flex-1 flex flex-col justify-between">
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#00d8df]/5 to-transparent pointer-events-none" />
+
               <div>
                 {/* Header */}
                 <div className="flex justify-between items-center border-b border-[#26262a] pb-4">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-[#141419] border-2 border-[#ffbe00] rounded flex items-center justify-center font-mc-title text-sm text-mc-gold shadow-inner">
+                    <div className="w-11 h-11 bg-gradient-to-br from-[#ffbe00] to-[#f2ab13] rounded flex items-center justify-center font-mc-title text-sm text-black shadow-lg">
                       G
                     </div>
                     <div>
-                      <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase">Quest Guild Board</h3>
-                      <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Guild Hall · Block B · Level 5 Explorer</p>
+                      <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase flex items-center gap-1.5">
+                        Quest Guild Board
+                        <span className="w-1.5 h-1.5 bg-[#00e676] rounded-full animate-pulse" />
+                      </h3>
+                      <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Guild Hall · Block B · Level 5</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-[8px] text-slate-500 font-mc-sub uppercase">XP Score</div>
-                    <div className="text-sm font-bold text-mc-gold font-mc-sub mt-0.5">720 PTS</div>
+                    <div className="text-base font-black text-mc-gold font-mc-title mt-0.5" style={{ textShadow: '0 0 8px rgba(255,190,0,0.3)' }}>720</div>
                   </div>
                 </div>
 
                 {/* Quick Stats */}
-                <div className="grid grid-cols-3 gap-3 mt-4">
+                <div className="grid grid-cols-3 gap-2.5 mt-4">
                   {[
-                    { label: 'Active Quests', value: '3', color: 'text-mc-cyan' },
-                    { label: 'Gate Passes', value: '2', color: 'text-emerald-400' },
-                    { label: 'Emerald Bank', value: '85', color: 'text-mc-gold' },
+                    { label: 'Active Quests', value: '3', color: '#00d8df', icon: '⚔️' },
+                    { label: 'Gate Passes', value: '2', color: '#00e676', icon: '🎫' },
+                    { label: 'Emerald Bank', value: '85', color: '#ffbe00', icon: '💎' },
                   ].map(stat => (
-                    <div key={stat.label} className="mc-slot p-3 text-center space-y-1">
-                      <p className={`text-lg font-black font-mc-title ${stat.color}`}>{stat.value}</p>
-                      <p className="text-[7px] font-mc-sub text-slate-500 uppercase">{stat.label}</p>
+                    <div key={stat.label} className="mc-slot p-3 text-center space-y-1.5 group hover:border-[#3c3c44] transition-colors cursor-default">
+                      <div className="text-base">{stat.icon}</div>
+                      <p className="text-lg font-black font-mc-title" style={{ color: stat.color, textShadow: `0 0 6px ${stat.color}30` }}>{stat.value}</p>
+                      <p className="text-[6px] font-mc-sub text-slate-500 uppercase leading-tight">{stat.label}</p>
                     </div>
                   ))}
                 </div>
@@ -289,33 +296,38 @@ export const Landing: React.FC = () => {
                 {/* XP Progress */}
                 <div className="space-y-1.5 mt-4">
                   <div className="flex justify-between text-[8px] font-mc-sub text-slate-400 uppercase">
-                    <span>Level 5 Progress</span>
+                    <span className="flex items-center gap-1">⭐ Level 5 Progress</span>
                     <span className="text-mc-cyan">720 / 1200 XP</span>
                   </div>
-                  <div className="w-full bg-[#141419] h-3 border border-[#3c3c44] p-0.5 rounded-sm">
+                  <div className="w-full bg-[#141419] h-3.5 border border-[#3c3c44] p-0.5 rounded-sm relative overflow-hidden">
                     <motion.div
                       initial={{ width: 0 }}
                       animate={{ width: '60%' }}
                       transition={{ delay: 0.8, duration: 1.5, ease: 'easeOut' }}
-                      className="bg-gradient-to-r from-mc-cyan to-emerald-400 h-full rounded-sm"
-                      style={{ boxShadow: '0 0 6px rgba(0,216,223,0.4)' }}
+                      className="bg-gradient-to-r from-[#00d8df] via-[#00e676] to-[#00d8df] h-full rounded-sm relative"
+                      style={{ boxShadow: '0 0 8px rgba(0,216,223,0.5)', backgroundSize: '200% 100%' }}
                     />
                   </div>
                 </div>
               </div>
 
               {/* Today's Activity */}
-              <div className="border-t border-[#26262a] pt-4 space-y-2 mt-4">
-                <p className="text-[8px] text-slate-500 font-mc-sub uppercase tracking-wider">Guild Activity Log</p>
+              <div className="border-t border-[#26262a] pt-3.5 space-y-2.5 mt-4">
+                <p className="text-[8px] text-slate-500 font-mc-sub uppercase tracking-wider flex items-center gap-1.5">
+                  <Clock size={9} /> Guild Activity Log
+                </p>
                 {[
-                  { icon: '🛡️', text: 'Warden outpass approved for weekend', status: 'Approved', statusColor: 'text-emerald-400' },
-                  { icon: '🍗', text: 'Monday Breakfast rated — 5 stars', status: 'Done', statusColor: 'text-emerald-400' },
-                  { icon: '🏹', text: 'WiFi issue reported in library logs', status: 'Active', statusColor: 'text-blue-400' },
+                  { icon: '🛡️', text: 'Outpass approved for weekend', status: 'Approved', statusColor: '#00e676' },
+                  { icon: '🍗', text: 'Breakfast rated — 5 stars', status: 'Done', statusColor: '#00e676' },
+                  { icon: '🏹', text: 'WiFi issue in library logs', status: 'Active', statusColor: '#00d8df' },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-2.5 text-[10px] font-mono-readable">
-                    <span className="text-base shrink-0">{item.icon}</span>
+                  <div key={i} className="flex items-center gap-2 text-[10px] font-mono-readable py-1 px-2 -mx-2 rounded hover:bg-[#2b2b35]/50 transition-colors cursor-default">
+                    <span className="text-sm shrink-0">{item.icon}</span>
                     <span className="text-slate-400 flex-1 truncate">{item.text}</span>
-                    <span className={`shrink-0 text-[8px] font-mc-sub uppercase ${item.statusColor}`}>{item.status}</span>
+                    <span className="shrink-0 text-[7px] font-mc-sub uppercase px-1.5 py-0.5 rounded border" 
+                          style={{ color: item.statusColor, borderColor: `${item.statusColor}40`, backgroundColor: `${item.statusColor}10` }}>
+                      {item.status}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -329,56 +341,84 @@ export const Landing: React.FC = () => {
             transition={{ delay: 0.3, type: 'spring', stiffness: 60, damping: 15 }}
             className="relative w-full flex flex-col"
           >
-            <div className="absolute -inset-6 bg-gradient-to-br from-[#00e676]/8 via-transparent to-[#ffbe00]/8 rounded-xl blur-2xl" />
+            <div className="absolute -inset-4 bg-gradient-to-br from-[#00e676]/10 via-transparent to-[#ffbe00]/10 rounded-xl blur-2xl" />
 
-            <div className="mc-card p-6 bg-[#1f1f26]/95 relative overflow-hidden flex flex-col justify-between flex-1">
+            <div className="mc-card p-5 md:p-6 bg-[#1f1f26]/95 relative overflow-hidden flex flex-col justify-between flex-1">
+              {/* Decorative corner accent */}
+              <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-[#ffbe00]/5 to-transparent pointer-events-none" />
+              
               <div>
                 {/* Header */}
                 <div className="border-b border-[#26262a] pb-4">
-                  <h3 className="text-[11px] font-bold text-white font-mc-sub uppercase tracking-wider">Select Faction Portal</h3>
-                  <p className="text-[8px] text-slate-500 font-mono-readable mt-0.5">Authenticate your identity to continue</p>
+                  <h3 className="text-[12px] font-bold text-white font-mc-sub uppercase tracking-wider flex items-center gap-2">
+                    <span className="w-6 h-6 bg-[#141419] border border-[#3c3c44] rounded flex items-center justify-center text-mc-gold text-[8px] font-mc-title">⚡</span>
+                    Select Faction Portal
+                  </h3>
+                  <p className="text-[9px] text-slate-500 font-mono-readable mt-1.5">Choose your role to authenticate and enter the guild</p>
                 </div>
 
                 {/* Faction Selectors */}
-                <div className="space-y-4 mt-6">
+                <div className="space-y-3 mt-5">
                   {/* Student Faction */}
                   <div 
                     onClick={() => handleRoleSelect(UserRole.STUDENT)}
-                    className="p-4 mc-slot hover:border-mc-cyan cursor-pointer transition-all duration-200 group flex items-start gap-4"
+                    className="p-4 mc-slot hover:border-[#00d8df] cursor-pointer transition-all duration-300 group relative overflow-hidden"
                   >
-                    <div className="w-12 h-12 bg-[#2b2b35] border border-[#3c3c44] rounded group-hover:border-mc-cyan flex items-center justify-center text-mc-cyan shrink-0 transition-colors">
-                      <GraduationCap size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-[10px] font-bold text-white font-mc-title uppercase tracking-wide group-hover:text-mc-cyan transition-colors">Student Explorer</h4>
-                      <p className="text-[10px] text-slate-400 font-mono-readable mt-1 leading-normal">
-                        Submit complaints, apply for digital outpasses, find roommates, and claim XP/Emerald rewards.
-                      </p>
+                    {/* Hover glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#00d8df]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    <div className="relative flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#00d8df]/20 to-[#141419] border-2 border-[#3c3c44] group-hover:border-[#00d8df] rounded flex items-center justify-center text-[#00d8df] shrink-0 transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(0,216,223,0.2)]">
+                        <GraduationCap size={22} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-[10px] font-bold text-white font-mc-title uppercase tracking-wide group-hover:text-[#00d8df] transition-colors">Student Explorer</h4>
+                        <p className="text-[9px] text-slate-500 font-mono-readable mt-1 leading-relaxed">
+                          Report issues, apply for outpasses, find roommates, and earn XP
+                        </p>
+                      </div>
+                      <ChevronRight size={16} className="text-zinc-700 group-hover:text-[#00d8df] group-hover:translate-x-1 transition-all shrink-0" />
                     </div>
                   </div>
 
                   {/* Warden Faction */}
                   <div 
                     onClick={() => handleRoleSelect(UserRole.ADMIN)}
-                    className="p-4 mc-slot hover:border-mc-gold cursor-pointer transition-all duration-200 group flex items-start gap-4"
+                    className="p-4 mc-slot hover:border-[#ffbe00] cursor-pointer transition-all duration-300 group relative overflow-hidden"
                   >
-                    <div className="w-12 h-12 bg-[#2b2b35] border border-[#3c3c44] rounded group-hover:border-mc-gold flex items-center justify-center text-mc-gold shrink-0 transition-colors">
-                      <ShieldCheck size={24} />
-                    </div>
-                    <div>
-                      <h4 className="text-[10px] font-bold text-white font-mc-title uppercase tracking-wide group-hover:text-mc-gold transition-colors">Village Warden</h4>
-                      <p className="text-[10px] text-slate-400 font-mono-readable mt-1 leading-normal">
-                        Review gate pass scrolls, announce official village notices, and manage the campus guild.
-                      </p>
+                    {/* Hover glow effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#ffbe00]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    <div className="relative flex items-center gap-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-[#ffbe00]/20 to-[#141419] border-2 border-[#3c3c44] group-hover:border-[#ffbe00] rounded flex items-center justify-center text-[#ffbe00] shrink-0 transition-all duration-300 group-hover:shadow-[0_0_12px_rgba(255,190,0,0.2)]">
+                        <ShieldCheck size={22} />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-[10px] font-bold text-white font-mc-title uppercase tracking-wide group-hover:text-[#ffbe00] transition-colors">Village Warden</h4>
+                        <p className="text-[9px] text-slate-500 font-mono-readable mt-1 leading-relaxed">
+                          Manage gate passes, post notices, and oversee the campus guild
+                        </p>
+                      </div>
+                      <ChevronRight size={16} className="text-zinc-700 group-hover:text-[#ffbe00] group-hover:translate-x-1 transition-all shrink-0" />
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Quick Info Footer */}
-              <div className="border-t border-[#26262a] pt-4 mt-6 flex justify-between items-center text-[8px] font-mc-sub uppercase text-slate-500">
-                <span>Secure College Auth</span>
-                <span className="text-mc-cyan">v2.4-stable</span>
+              {/* Bottom Features Row */}
+              <div className="border-t border-[#26262a] pt-4 mt-5">
+                <div className="grid grid-cols-3 gap-3">
+                  {[
+                    { label: 'Secure Auth', icon: '🔒', color: '#00d8df' },
+                    { label: 'Instant Access', icon: '⚡', color: '#ffbe00' },
+                    { label: 'Role-Based', icon: '🛡️', color: '#00e676' },
+                  ].map(feat => (
+                    <div key={feat.label} className="text-center py-2">
+                      <div className="text-base mb-1">{feat.icon}</div>
+                      <p className="text-[7px] font-mc-sub uppercase tracking-wider" style={{ color: feat.color }}>{feat.label}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </motion.div>
