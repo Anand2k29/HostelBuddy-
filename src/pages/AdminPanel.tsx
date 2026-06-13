@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Issue, IssueStatus, User, UserRole, GatePass, GatePassStatus, IssueCategory, IssuePriority } from '../types';
-import { Merge, CheckSquare, Square, Users, BarChart3, ListFilter, CheckCircle, Clock, AlertTriangle, UserCircle, Ticket } from 'lucide-react';
+import { Merge, CheckSquare, Square, Users, BarChart3, ListFilter, CheckCircle, Clock, AlertTriangle, UserCircle, Ticket, Shield } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AdminPanelProps {
@@ -24,6 +24,7 @@ type AdminTab = 'ISSUES' | 'PASSES' | 'USERS' | 'ANALYTICS';
 export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge, gatePasses, onUpdatePassStatus }) => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<AdminTab>('ISSUES');
+  const [showCriticalOnly, setShowCriticalOnly] = useState(false);
 
   const stats = useMemo(() => {
     const pending = issues.filter(i => i.status !== IssueStatus.RESOLVED && i.status !== IssueStatus.CLOSED).length;
@@ -38,6 +39,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge, gatePas
 
   const activeIssues = issues.filter(i => i.status !== IssueStatus.CLOSED && !i.mergedInto);
   const pendingPasses = gatePasses.filter(p => p.status === GatePassStatus.PENDING);
+
+  const filteredIssues = useMemo(() => {
+    if (!showCriticalOnly) return activeIssues;
+    return activeIssues.filter(
+      issue => issue.category === IssueCategory.RAGGING || issue.priority === IssuePriority.CRITICAL
+    );
+  }, [activeIssues, showCriticalOnly]);
 
   const toggleSelect = (id: string) => {
     setSelectedIds(prev => prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]);
@@ -82,19 +90,20 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge, gatePas
       case 'ISSUES':
         return (
           <div className="bg-white rounded-xl shadow-sm border border-slate-200/80 overflow-hidden">
-            <div className="p-4 border-b border-slate-200/80 flex justify-between items-center">
+            <div className="p-4 border-b border-slate-200/80 flex justify-between items-center flex-wrap gap-4">
                 <div className="flex items-center space-x-4">
                     <h3 className="text-lg font-bold text-slate-800">All Issues</h3>
-                    {/* Filters */}
-                    <div className="flex items-center space-x-2">
-                        <ListFilter size={16} className="text-slate-400" />
-                        <select className="text-sm border-none bg-transparent focus:ring-0">
-                            <option>Category</option>
-                        </select>
-                        <select className="text-sm border-none bg-transparent focus:ring-0">
-                            <option>Priority</option>
-                        </select>
-                    </div>
+                    <button
+                        onClick={() => setShowCriticalOnly(!showCriticalOnly)}
+                        className={`flex items-center space-x-2 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                            showCriticalOnly
+                            ? 'bg-red-600 text-white shadow-md'
+                            : 'bg-red-100 text-red-700 hover:bg-red-200'
+                        }`}
+                    >
+                        <AlertTriangle size={14} />
+                        <span>Show Critical / Ragging Only</span>
+                    </button>
                 </div>
                 {selectedIds.length > 1 && (
                     <button 
@@ -118,14 +127,14 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge, gatePas
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {activeIssues.map(issue => (
+                {filteredIssues.map(issue => (
                   <tr 
                     key={issue.id} 
                     className={`transition-colors cursor-pointer 
                       ${selectedIds.includes(issue.id) 
                         ? 'bg-indigo-50' 
-                        : issue.category === 'RAGGING' 
-                          ? 'bg-rose-50 hover:bg-rose-100' 
+                        : issue.category === IssueCategory.RAGGING 
+                          ? 'bg-red-50 border-l-4 border-l-red-500' 
                           : 'hover:bg-slate-50'
                       }`}
                     onClick={() => toggleSelect(issue.id)}
@@ -142,7 +151,7 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge, gatePas
                     </td>
                     <td className="p-4">
                       <span className={`px-2 py-1 rounded text-xs font-bold ${
-                        issue.category === 'RAGGING' ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-600'
+                        issue.category === 'RAGGING' ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-600'
                       }`}>{issue.category}</span>
                     </td>
                     <td className="p-4">
@@ -155,12 +164,9 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge, gatePas
                     <td className="p-4 text-slate-600">{issue.status}</td>
                     <td className="p-4 text-slate-500">
                       {issue.isAnonymous ? (
-                        <div className="flex items-center space-x-2">
-                          <UserCircle size={20} className="text-slate-400" />
-                          <span className="font-semibold text-slate-600">Anonymous Student</span>
-                        </div>
+                        <span className="text-slate-500 italic flex items-center gap-1"><Shield size={14}/> Anonymous</span>
                       ) : (
-                        <span>{issue.reporterName}</span>
+                        <span className="font-medium text-slate-900">{issue.reporterName || 'Unknown'}</span>
                       )}
                     </td>
                   </tr>

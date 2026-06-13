@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy, ShieldAlert, Ticket } from 'lucide-react';
+import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy, ShieldAlert, Ticket, Utensils } from 'lucide-react';
 import { User, UserRole } from '../types';
 import { motion } from 'framer-motion';
 
@@ -40,12 +40,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
       <nav className="flex-1 px-4 space-y-2 overflow-y-auto no-scrollbar">
         <p className="px-4 text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Menu</p>
         <NavItem to="/dashboard" icon={<Home size={20} />} label="Dashboard" />
-        <NavItem to="/profile" icon={<UserIcon size={20} />} label="My Profile" />
-        <NavItem to="/issues" icon={<List size={20} />} label="All Issues" />
+        <NavItem to="/outpass" icon={<Ticket size={20} />} label={<span>Gate Pass <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">NEW</span></span>} />
         <NavItem to="/report" icon={<PlusCircle size={20} />} label="Report Issue" />
+        <NavItem to="/issues" icon={<List size={20} />} label="All Issues" />
+        <NavItem to="/mess-menu" icon={<Utensils size={20} />} label="Mess Menu" />
         <NavItem to="/announcements" icon={<Bell size={20} />} label="Announcements" />
         <NavItem to="/lost-found" icon={<Search size={20} />} label="Lost & Found" />
-        <NavItem to="/outpass" icon={<Ticket size={20} />} label="Gate Pass" />
         
         {user.role === UserRole.ADMIN && (
           <div className="pt-4 mt-2">
