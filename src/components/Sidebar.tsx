@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy } from 'lucide-react';
+import { Home, List, PlusCircle, Shield, Bell, Search, LogOut, User as UserIcon, Settings, LifeBuoy, ShieldAlert } from 'lucide-react';
 import { User, UserRole } from '../types';
 import { motion } from 'framer-motion';
 
@@ -53,6 +53,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ user, onLogout }) => {
           </div>
         )}
       </nav>
+
+      <div className="px-4 py-2">
+          <div className="my-2 border-t border-gray-200/80"></div>
+          <NavLink to="/ragging" className={({ isActive }) =>
+    `group relative flex items-center space-x-3 px-4 py-2.5 rounded-lg transition-all duration-200 ${
+      isActive
+        ? 'bg-rose-100 text-rose-700 font-semibold'
+        : 'text-rose-600 hover:bg-rose-50/60 hover:text-rose-700'
+    }`
+  }>
+            <ShieldAlert size={20} />
+            <span>Anti-Ragging Cell</span>
+          </NavLink>
+      </div>
 
       <div className="p-4 space-y-2 border-t border-gray-200/80">
         <div className="flex items-center p-3 bg-gray-100/60 rounded-xl">

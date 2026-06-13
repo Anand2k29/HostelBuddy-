@@ -24,6 +24,7 @@ export enum IssueCategory {
   ELECTRICAL = 'ELECTRICAL',
   FURNITURE = 'FURNITURE',
   CLEANING = 'CLEANING',
+  RAGGING = 'RAGGING',
   OTHER = 'OTHER'
 }
 
@@ -43,6 +44,7 @@ export interface Issue {
   priority: IssuePriority;
   status: IssueStatus;
   isPrivate: boolean;
+  isAnonymous?: boolean;
   reporterId: string;
   reporterName: string;
   createdAt: string;

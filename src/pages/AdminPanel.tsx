@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Issue, IssueStatus, User, UserRole, IssueCategory, IssuePriority } from '../types';
-import { Merge, CheckSquare, Square, Users, BarChart3, ListFilter, CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { Merge, CheckSquare, Square, Users, BarChart3, ListFilter, CheckCircle, Clock, AlertTriangle, UserCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface AdminPanelProps {
@@ -116,7 +116,13 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge }) => {
                 {activeIssues.map(issue => (
                   <tr 
                     key={issue.id} 
-                    className={`transition-colors cursor-pointer ${selectedIds.includes(issue.id) ? 'bg-indigo-50' : 'hover:bg-slate-50'}`}
+                    className={`transition-colors cursor-pointer 
+                      ${selectedIds.includes(issue.id) 
+                        ? 'bg-indigo-50' 
+                        : issue.category === 'RAGGING' 
+                          ? 'bg-rose-50 hover:bg-rose-100' 
+                          : 'hover:bg-slate-50'
+                      }`}
                     onClick={() => toggleSelect(issue.id)}
                   >
                     <td className="p-4 text-center">
@@ -125,11 +131,33 @@ export const AdminPanel: React.FC<AdminPanelProps> = ({ issues, onMerge }) => {
                         : <Square size={18} className="text-slate-300" />
                       }
                     </td>
-                    <td className="p-4"><div className="font-bold text-slate-900">{issue.title}</div><div className="text-slate-500 truncate max-w-xs">{issue.description}</div></td>
-                    <td className="p-4"><span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs font-bold">{issue.category}</span></td>
-                    <td className="p-4"><span className={`px-2 py-1 rounded text-xs font-bold ${issue.priority === 'HIGH' || issue.priority === 'CRITICAL' ? 'text-red-600 bg-red-100' : 'text-slate-600 bg-slate-100'}`}>{issue.priority}</span></td>
+                    <td className="p-4">
+                      <div className="font-bold text-slate-900">{issue.title}</div>
+                      <div className="text-slate-500 truncate max-w-xs">{issue.description}</div>
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded text-xs font-bold ${
+                        issue.category === 'RAGGING' ? 'bg-rose-100 text-rose-600' : 'bg-slate-100 text-slate-600'
+                      }`}>{issue.category}</span>
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded text-xs font-bold ${
+                        issue.priority === 'HIGH' || issue.priority === 'CRITICAL' 
+                        ? 'text-red-600 bg-red-100' 
+                        : 'text-slate-600 bg-slate-100'
+                      }`}>{issue.priority}</span>
+                    </td>
                     <td className="p-4 text-slate-600">{issue.status}</td>
-                    <td className="p-4 text-slate-500">{issue.reporterName}</td>
+                    <td className="p-4 text-slate-500">
+                      {issue.isAnonymous ? (
+                        <div className="flex items-center space-x-2">
+                          <UserCircle size={20} className="text-slate-400" />
+                          <span className="font-semibold text-slate-600">Anonymous Student</span>
+                        </div>
+                      ) : (
+                        <span>{issue.reporterName}</span>
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>
